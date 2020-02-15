@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 
 namespace TddXt.HttpContextMock
@@ -20,7 +15,22 @@ namespace TddXt.HttpContextMock
     {
       return new HttpRequestMock(RealInstance.Request);
     }
+
+    public HttpResponseMock Response()
+    {
+      return new HttpResponseMock(RealInstance.Response);
+    }
   }
 
+  public class HttpResponseMock
+  {
+    public HttpResponse RealInstance { get; }
 
+    public HttpResponseMock(HttpResponse response)
+    {
+      RealInstance = response;
+    }
+
+
+  }
 }
