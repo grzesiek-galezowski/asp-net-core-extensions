@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>TddXt.HttpContextMock</AssemblyName>
+    <RootNamespace>TddXt.HttpContextMock</RootNamespace>
+    <Nullable>enable</Nullable>
+    <Version>0.1.0</Version>
+    <Authors>Grzegorz Gałęzowski</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>A mock for HttpContext allowing to setup HttpRequest and verify HttpResponse</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>
