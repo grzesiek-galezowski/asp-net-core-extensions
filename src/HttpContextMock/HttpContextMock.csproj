@@ -9,11 +9,22 @@
     <Authors>Grzegorz Gałęzowski</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>A mock for HttpContext allowing to setup HttpRequest and verify HttpResponse</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/grzesiek-galezowski/asp-net-core-extensions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/grzesiek-galezowski/asp-net-core-extensions</RepositoryUrl>
+    <Copyright>Grzegorz Gałęzowski 2020</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
