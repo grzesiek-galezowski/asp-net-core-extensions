@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using TddXt.HttpContextMock.Internal;
 
 namespace TddXt.HttpContextMock
 {
@@ -144,9 +145,9 @@ namespace TddXt.HttpContextMock
 
     public HttpRequestMock WithHeader(object properties)
     {
-      foreach (var propertyInfo in properties.GetType().GetProperties())
+      foreach (var header in HttpHeadersFromObject.ExtractHeaders(properties))
       {
-        WithHeader(propertyInfo.Name.Replace("_", "-"), propertyInfo.GetValue(properties).ToString());
+        WithHeader(header.Name(), header.Value());
       }
       return this;
     }

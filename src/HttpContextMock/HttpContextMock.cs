@@ -1,3 +1,4 @@
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 
 namespace TddXt.HttpContextMock
@@ -20,17 +21,5 @@ namespace TddXt.HttpContextMock
     {
       return new HttpResponseMock(RealInstance.Response);
     }
-  }
-
-  public class HttpResponseMock
-  {
-    public HttpResponse RealInstance { get; }
-
-    public HttpResponseMock(HttpResponse response)
-    {
-      RealInstance = response;
-    }
-
-
   }
 }
