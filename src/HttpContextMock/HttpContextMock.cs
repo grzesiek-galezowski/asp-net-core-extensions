@@ -1,3 +1,4 @@
+using System.IO;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 
@@ -10,6 +11,7 @@ namespace TddXt.HttpContextMock
     public HttpContextMock()
     {
       RealInstance = new DefaultHttpContext();
+      RealInstance.Response.Body = new MemoryStream();
     }
 
     public HttpRequestMock Request()

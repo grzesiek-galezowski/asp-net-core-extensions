@@ -15,6 +15,7 @@ namespace TddXt.HttpContextMock
 
     public string BodyString()
     {
+      RealInstance.Body.Position = 0;
       using var streamReader = new StreamReader(RealInstance.Body);
       var content = streamReader.ReadToEnd();
       return content;

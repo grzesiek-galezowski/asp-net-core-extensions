@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Mime;
+using FluentAssertions;
 using NUnit.Framework;
 using TddXt.HttpContextMock;
 
@@ -28,6 +29,13 @@ namespace HttpContextMockSpecification
         .SetQueryParam("c", "x");
       //todo https://flurl.dev/docs/fluent-http/
       Assert.AreEqual("{\"A\":123,\"B\":\"SAA\"}", new StreamReader(httpContextMock.RealInstance.Request.Body).ReadToEnd());
+    }
+
+    [Test]
+    public void Mock()
+    {
+      var httpContextMock = new HttpContextMock();
+      httpContextMock.Response().BodyString().Should().BeEmpty();
     }
   }
 }
