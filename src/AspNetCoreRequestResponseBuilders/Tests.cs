@@ -12,7 +12,7 @@ namespace HttpContextMockSpecification
     [Test]
     public void Test1()
     {
-      var httpContextMock = new HttpContextMock();
+      var httpContextMock = HttpContextMock.Default();
       httpContextMock.Request()
         .WithHeader("Accept", "text/plain")
         .WithHeader(new {Accept = MediaTypeNames.Text.Plain})
@@ -34,7 +34,7 @@ namespace HttpContextMockSpecification
     [Test]
     public void Mock()
     {
-      var httpContextMock = new HttpContextMock();
+      var httpContextMock = HttpContextMock.Default();
       httpContextMock.Response().BodyString().Should().BeEmpty();
     }
   }

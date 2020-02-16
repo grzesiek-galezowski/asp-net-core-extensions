@@ -10,11 +10,13 @@ namespace TddXt.HttpContextMock
 {
   public class HttpRequestMock
   {
+    private readonly IHttpContextMockSerialization _serialization;
     public HttpRequest RealInstance { get; }
 
-    public HttpRequestMock(HttpRequest request)
+    public HttpRequestMock(HttpRequest request, IHttpContextMockSerialization serialization)
     {
       RealInstance = request;
+      _serialization = serialization;
     }
 
     public HttpRequestMock SetStringBody(string content)
@@ -117,8 +119,7 @@ namespace TddXt.HttpContextMock
 
     public HttpRequestMock SetJsonBody<T>(T dto)
     {
-      return SetContentType(MediaTypeNames.Application.Json).SetStringBody(
-        System.Text.Json.JsonSerializer.Serialize(dto));
+      return SetContentType(MediaTypeNames.Application.Json).SetStringBody(_serialization.Serialize(dto));
     }
 
     public HttpRequestMock SetContentType(string requestContentType)

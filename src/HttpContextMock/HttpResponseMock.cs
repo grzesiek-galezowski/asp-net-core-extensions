@@ -1,15 +1,16 @@
 using System.IO;
-using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
 namespace TddXt.HttpContextMock
 {
   public class HttpResponseMock
   {
+    private readonly IHttpContextMockSerialization _serialization;
     public HttpResponse RealInstance { get; }
 
-    public HttpResponseMock(HttpResponse response)
+    public HttpResponseMock(HttpResponse response, IHttpContextMockSerialization serialization)
     {
+      _serialization = serialization;
       RealInstance = response;
     }
 
@@ -24,7 +25,7 @@ namespace TddXt.HttpContextMock
     public T BodyObject<T>()
     {
       var content = BodyString();
-      var deserialized = JsonSerializer.Deserialize<T>(content);
+      var deserialized = _serialization.Deserialize<T>(content);
       return deserialized;
     }
   }
