@@ -44,6 +44,7 @@ namespace TodoApp
 
     private static IAsyncAction CreateAddTodoAction()
     {
+      //bug as singleton lifescopes
         return new TokenValidationAction(
             new AddTodoAction(new IdGenerator()));
     }

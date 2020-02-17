@@ -37,8 +37,7 @@ namespace TddXt.HttpContextMock
 
     public AndConstraint<HttpResponseMockAssertions> ContainHeaders(object o)
     {
-      var keyValuePairs = HttpHeadersFromObject.ExtractHeaders(o).Select(h => 
-        new KeyValuePair<string, StringValues>(h.Name(), h.Value()));
+      var keyValuePairs = HttpHeadersFromObject.ExtractHeadersKeyValuePairs(o);
 
       Subject.RealInstance.Headers.Should().Contain(keyValuePairs);
       return new AndConstraint<HttpResponseMockAssertions>(this);
