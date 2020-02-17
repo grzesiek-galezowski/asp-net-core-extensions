@@ -12,26 +12,29 @@ namespace TodoAppSpecification
   public class Tests
   {
     [Test]
-    public async Task ShouldRespondToPostTodo()
+    public async Task ShouldRespondToPostTodoWithTodoCreated()
     {
-      var context = HttpContextMock.Default();
+      //GIVEN
       var idGenerator = Substitute.For<IIdGenerator>();
-      var action = new AddTodoAction(
-        context.Request().RealInstance, 
-        context.Response().RealInstance, 
-        idGenerator);
       var id = Any.String();
-
-      idGenerator.Generate().Returns(id);
-
-      context.Request().PostJson(new TodoDto
+      var context = HttpContextMock.Default();
+      var httpRequest = context.Request().PostJson(new TodoDto
       {
         Title = "a",
         Content = "b"
-      });
+      }).RealInstance;
+      var httpResponse = context.Response().RealInstance;
+      var action = new AddTodoAction(
+        httpRequest, 
+        httpResponse, 
+        idGenerator);
 
+      idGenerator.Generate().Returns(id);
+
+      //WHEN
       await action.ExecuteAsync();
 
+      //THEN
       context.Response().Should().HaveBody(new TodoCreatedDto
       {
         Title = "a",
