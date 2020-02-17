@@ -9,13 +9,14 @@ using static TddXt.AnyRoot.Root;
 
 namespace TodoAppSpecification
 {
-  public class Tests
+  public class AddTodoActionSpecification
   {
     [Test]
     public async Task ShouldRespondToPostTodoWithTodoCreated()
     {
       //GIVEN
       var idGenerator = Substitute.For<IIdGenerator>();
+      var action = new AddTodoAction(idGenerator);
       var id = Any.String();
       var context = HttpContextMock.Default();
       var httpRequest = context.Request().PostJson(new TodoDto
@@ -31,8 +32,9 @@ namespace TodoAppSpecification
 
       idGenerator.Generate().Returns(id);
 
-      //WHEN
-      await action.ExecuteAsync();
+      await action.ExecuteAsync(
+          context.Request().RealInstance, 
+          context.Response().RealInstance);
 
       //THEN
       context.Response().Should().HaveBody(new TodoCreatedDto

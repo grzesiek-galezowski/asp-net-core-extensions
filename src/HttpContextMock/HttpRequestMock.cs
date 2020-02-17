@@ -146,9 +146,9 @@ namespace TddXt.HttpContextMock
 
     public HttpRequestMock WithHeader(object properties)
     {
-      foreach (var header in HttpHeadersFromObject.ExtractHeaders(properties))
+      foreach (var header in HttpHeadersFromObject.ExtractHeadersKeyValuePairs(properties))
       {
-        WithHeader(header.Name(), header.Value());
+        WithHeader(header.Key, header.Value);
       }
       return this;
     }
