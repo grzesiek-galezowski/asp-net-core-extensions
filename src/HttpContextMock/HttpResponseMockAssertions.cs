@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using FluentAssertions;
 using FluentAssertions.Primitives;
@@ -18,6 +19,12 @@ namespace TddXt.HttpContextMock
     public AndConstraint<HttpResponseMockAssertions> ContainHeader(string key, string value)
     {
       Subject.RealInstance.Headers.Should().Contain(key, value);
+      return new AndConstraint<HttpResponseMockAssertions>(this);
+    }
+
+    public AndConstraint<HttpResponseMockAssertions> HaveStatusCode(HttpStatusCode code)
+    {
+      Subject.RealInstance.StatusCode.Should().Be((int)code);
       return new AndConstraint<HttpResponseMockAssertions>(this);
     }
 

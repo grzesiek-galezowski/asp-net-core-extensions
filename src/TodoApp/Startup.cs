@@ -36,11 +36,16 @@ namespace TodoApp
         {
           endpoints.MapPost("/todo",
             async context =>
-              await new AddTodoAction(
-                context.Request, 
-                context.Response, 
-                new IdGenerator()).ExecuteAsync());
+              await CreateAddTodoAction().ExecuteAsync(
+                  context.Request, 
+                  context.Response));
         });
+    }
+
+    private static IAsyncAction CreateAddTodoAction()
+    {
+        return new TokenValidationAction(
+            new AddTodoAction(new IdGenerator()));
     }
   }
 }
