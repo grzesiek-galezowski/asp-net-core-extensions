@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using NSubstitute;
-using NSubstitute.Core.Arguments;
 using NUnit.Framework;
 using TddXt.AnyRoot.Strings;
 using TddXt.HttpContextMock;
@@ -25,16 +24,12 @@ namespace TodoAppSpecification
         Content = "b"
       }).RealInstance;
       var httpResponse = context.Response().RealInstance;
-      var action = new AddTodoAction(
-        httpRequest, 
-        httpResponse, 
-        idGenerator);
 
       idGenerator.Generate().Returns(id);
 
       await action.ExecuteAsync(
-          context.Request().RealInstance, 
-          context.Response().RealInstance);
+          httpRequest, 
+          httpResponse);
 
       //THEN
       context.Response().Should().HaveBody(new TodoCreatedDto

@@ -5,7 +5,7 @@
     <AssemblyName>TddXt.HttpContextMock</AssemblyName>
     <RootNamespace>TddXt.HttpContextMock</RootNamespace>
     <Nullable>enable</Nullable>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>Grzegorz Gałęzowski</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>A mock for HttpContext allowing to setup HttpRequest and verify HttpResponse</Description>
