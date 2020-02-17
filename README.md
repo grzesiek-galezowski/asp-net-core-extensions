@@ -6,6 +6,7 @@ public async Task ShouldRespondToPostTodoWithTodoCreated()
 {
   //GIVEN
   var idGenerator = Substitute.For<IIdGenerator>();
+  var action = new AddTodoAction(idGenerator);
   var id = Any.String();
   var context = HttpContextMock.Default();
   var httpRequest = context.Request().PostJson(new TodoDto
@@ -14,15 +15,12 @@ public async Task ShouldRespondToPostTodoWithTodoCreated()
     Content = "b"
   }).RealInstance;
   var httpResponse = context.Response().RealInstance;
-  var action = new AddTodoAction(
-    httpRequest, 
-    httpResponse, 
-    idGenerator);
 
   idGenerator.Generate().Returns(id);
 
-  //WHEN
-  await action.ExecuteAsync();
+  await action.ExecuteAsync(
+      httpRequest, 
+      httpResponse);
 
   //THEN
   context.Response().Should().HaveBody(new TodoCreatedDto
