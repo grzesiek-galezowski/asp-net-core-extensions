@@ -4,6 +4,7 @@ using NUnit.Framework;
 using TddXt.AnyRoot.Strings;
 using TddXt.HttpContextMock;
 using TodoApp;
+using TodoApp.App;
 using static TddXt.AnyRoot.Root;
 
 namespace TodoAppSpecification
@@ -17,7 +18,7 @@ namespace TodoAppSpecification
       var idGenerator = Substitute.For<IIdGenerator>();
       var action = new AddTodoAction<TodoDto, IAddTodoResponseInProgress>(
         new RequestParser<TodoDto>(),
-        new TodoCommandFactory(idGenerator),
+        new TodoCommandFactory(idGenerator, new TodoRepository()),
         new ResponseInProgressFactory());
       var id = Any.String();
       var context = HttpContextMock.Default();

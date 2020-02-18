@@ -11,9 +11,9 @@ namespace TodoApp
 
   public class RequestParser<T> : IRequestParser<T>
   {
-    public async Task<T> ParseAsync(HttpRequest request)
+    public Task<T> ParseAsync(HttpRequest request)
     {
-      return await JsonSerializer.DeserializeAsync<T>(request.Body);
+      return JsonSerializer.DeserializeAsync<T>(request.Body).AsTask();
     }
   }
 }

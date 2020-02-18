@@ -1,9 +1,12 @@
 using System.Text.Json.Serialization;
 
-namespace TodoApp
+namespace TodoApp.App
 {
-  public class TodoDto
+  public class TodoCreatedDto
   {
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
+
     [JsonPropertyName("title")]
     public string Title { get; set; }
     

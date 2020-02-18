@@ -3,26 +3,6 @@ using Microsoft.AspNetCore.Http;
 
 namespace TodoApp
 {
-  public interface ITodoCommandFactory<TDto, TResponse>
-  {
-    AddTodoCommand CreateCommand(TDto dto, TResponse responseInProgress);
-  }
-
-  public class TodoCommandFactory : ITodoCommandFactory<TodoDto, IAddTodoResponseInProgress>
-  {
-    private readonly IIdGenerator _idGenerator;
-
-    public TodoCommandFactory(IIdGenerator idGenerator)
-    {
-      _idGenerator = idGenerator;
-    }
-
-    public AddTodoCommand CreateCommand(TodoDto dto, IAddTodoResponseInProgress responseInProgress)
-    {
-      return new AddTodoCommand(dto, _idGenerator, responseInProgress);
-    }
-  }
-
   public class AddTodoAction<TDto, TResponse> : IAsyncAction
     {
       private readonly IRequestParser<TDto> _requestParser;
@@ -44,7 +24,8 @@ namespace TodoApp
           //bug cancellation token
             var dto = await _requestParser.ParseAsync(request);
             var responseInProgress = _responseInProgressFactory.CreateResponseInProgress(response);
-            await _todoCommandFactory.CreateCommand(dto, responseInProgress).ExecuteAsync();
+            var command = _todoCommandFactory.CreateCommand(dto, responseInProgress);
+            await command.ExecuteAsync();
         }
     }
 }

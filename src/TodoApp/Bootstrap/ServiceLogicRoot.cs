@@ -1,4 +1,6 @@
-namespace TodoApp
+using TodoApp.App;
+
+namespace TodoApp.Bootstrap
 {
   internal class ServiceLogicRoot
   {
@@ -6,11 +8,10 @@ namespace TodoApp
 
     public ServiceLogicRoot()
     {
-      IIdGenerator idGenerator = new IdGenerator();
       _addTodoAction = new TokenValidationAction(
         new AddTodoAction<TodoDto, IAddTodoResponseInProgress>(
           new RequestParser<TodoDto>(), 
-          new TodoCommandFactory(idGenerator), 
+          new TodoCommandFactory(new IdGenerator(), new TodoRepository()), 
           new ResponseInProgressFactory()));
     }
 
