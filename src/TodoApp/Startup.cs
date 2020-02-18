@@ -19,6 +19,7 @@ namespace TodoApp
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
+      services.AddSingleton(x => new ServiceLogicRoot());
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,21 +33,16 @@ namespace TodoApp
       app.UseRouting();
       app.UseAuthorization();
 
+
       app.UseEndpoints(endpoints =>
         {
           endpoints.MapPost("/todo",
             async context =>
-              await CreateAddTodoAction().ExecuteAsync(
-                  context.Request, 
-                  context.Response));
+            {
+              await context.RequestServices.GetRequiredService<ServiceLogicRoot>().AddTodoAction()
+                .ExecuteAsync(context.Request, context.Response);
+            });
         });
-    }
-
-    private static IAsyncAction CreateAddTodoAction()
-    {
-      //bug as singleton lifescopes
-        return new TokenValidationAction(
-            new AddTodoAction(new IdGenerator()));
     }
   }
 }

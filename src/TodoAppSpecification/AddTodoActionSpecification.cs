@@ -15,7 +15,10 @@ namespace TodoAppSpecification
     {
       //GIVEN
       var idGenerator = Substitute.For<IIdGenerator>();
-      var action = new AddTodoAction(idGenerator);
+      var action = new AddTodoAction<TodoDto, IAddTodoResponseInProgress>(
+        new RequestParser<TodoDto>(),
+        new TodoCommandFactory(idGenerator),
+        new ResponseInProgressFactory());
       var id = Any.String();
       var context = HttpContextMock.Default();
       var httpRequest = context.Request().PostJson(new TodoDto
