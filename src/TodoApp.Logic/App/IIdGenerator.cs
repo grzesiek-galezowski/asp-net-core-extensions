@@ -1,4 +1,4 @@
-namespace TodoApp.App
+namespace TodoApp.Logic.App
 {
   public interface IIdGenerator
   {

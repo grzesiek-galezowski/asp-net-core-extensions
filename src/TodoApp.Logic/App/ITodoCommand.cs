@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace TodoApp.App
+namespace TodoApp.Logic.App
 {
   public interface ITodoCommand
   {

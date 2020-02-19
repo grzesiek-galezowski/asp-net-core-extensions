@@ -42,6 +42,13 @@ namespace TodoApp.Bootstrap
               await context.RequestServices.GetRequiredService<ServiceLogicRoot>().AddTodoAction()
                 .ExecuteAsync(context.Request, context.Response);
             });
+
+          endpoints.MapPost("/todo/{id1}/link/{id2}",
+            async context =>
+            {
+              await context.RequestServices.GetRequiredService<ServiceLogicRoot>().LinkTodoAction()
+                .ExecuteAsync(context.Request, context.Response);
+            });
         });
     }
   }

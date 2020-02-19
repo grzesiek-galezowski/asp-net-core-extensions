@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using TodoApp.App;
 using TodoApp.Bootstrap;
+using TodoApp.Logic.App;
 
 namespace TodoApp
 {

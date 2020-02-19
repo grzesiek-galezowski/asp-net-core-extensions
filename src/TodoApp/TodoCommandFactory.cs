@@ -1,4 +1,5 @@
-using TodoApp.App;
+using TodoApp.Bootstrap;
+using TodoApp.Logic.App;
 
 namespace TodoApp
 {
@@ -7,7 +8,9 @@ namespace TodoApp
     ITodoCommand CreateCommand(TDto dto, TResponse responseInProgress);
   }
 
-  public class TodoCommandFactory : ITodoCommandFactory<TodoDto, IAddTodoResponseInProgress>
+  public class TodoCommandFactory : 
+    ITodoCommandFactory<TodoDto, IAddTodoResponseInProgress>,
+    ITodoCommandFactory<LinkTodoDto, ILinkTodoResponseInProgress>
   {
     private readonly IIdGenerator _idGenerator;
     private readonly ITodoRepository _todoRepository;
@@ -21,6 +24,11 @@ namespace TodoApp
     public ITodoCommand CreateCommand(TodoDto dto, IAddTodoResponseInProgress responseInProgress)
     {
       return new AddTodoCommand(dto, _idGenerator, responseInProgress, _todoRepository);
+    }
+
+    public ITodoCommand CreateCommand(LinkTodoDto dto, ILinkTodoResponseInProgress responseInProgress)
+    {
+      throw new System.NotImplementedException();
     }
   }
 }

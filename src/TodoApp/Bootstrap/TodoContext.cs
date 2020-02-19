@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TodoApp.App;
+using TodoApp.Logic.App;
 
 namespace TodoApp.Bootstrap
 {

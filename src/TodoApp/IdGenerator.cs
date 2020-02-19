@@ -1,5 +1,5 @@
 using System;
-using TodoApp.App;
+using TodoApp.Logic.App;
 
 namespace TodoApp
 {

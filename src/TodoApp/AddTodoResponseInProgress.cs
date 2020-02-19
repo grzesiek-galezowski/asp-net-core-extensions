@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using TodoApp.App;
+using TodoApp.Logic.App;
 
 namespace TodoApp
 {

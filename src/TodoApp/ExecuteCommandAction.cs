@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace TodoApp
 {
-  public class AddTodoAction<TDto, TResponse> : IAsyncAction
+  public class ExecuteCommandAction<TDto, TResponse> : IAsyncAction
     {
       private readonly IRequestParser<TDto> _requestParser;
         private readonly ITodoCommandFactory<TDto, TResponse> _todoCommandFactory;
         private readonly IResponseInProgressFactory<TResponse> _responseInProgressFactory;
 
-        public AddTodoAction(
+        public ExecuteCommandAction(
           IRequestParser<TDto> requestParser, 
           ITodoCommandFactory<TDto, TResponse> todoCommandFactory, 
           IResponseInProgressFactory<TResponse> responseInProgressFactory)
