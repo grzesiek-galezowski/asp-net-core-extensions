@@ -1,4 +1,4 @@
-namespace TodoApp.Bootstrap
+namespace TodoApp.Logic.App
 {
   public interface ILinkTodoResponseInProgress
   {

@@ -20,7 +20,7 @@ namespace TodoApp
 
     ILinkTodoResponseInProgress IResponseInProgressFactory<ILinkTodoResponseInProgress>.CreateResponseInProgress(HttpResponse response)
     {
-      throw new System.NotImplementedException();
+      return new LinkTodoResponseInProgress(response);
     }
   }
 }

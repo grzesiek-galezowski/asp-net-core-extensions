@@ -1,11 +1,10 @@
-using TodoApp.Bootstrap;
-using TodoApp.Logic.App;
+using System.Threading.Tasks;
 
-namespace TodoApp
+namespace TodoApp.Logic.App
 {
   public interface ITodoCommandFactory<in TDto, in TResponse>
   {
-    ITodoCommand CreateCommand(TDto dto, TResponse responseInProgress);
+    Task<ITodoCommand> CreateCommandAsync(TDto dto, TResponse responseInProgress);
   }
 
   public class TodoCommandFactory : 
@@ -21,14 +20,14 @@ namespace TodoApp
       _todoRepository = todoRepository;
     }
 
-    public ITodoCommand CreateCommand(TodoDto dto, IAddTodoResponseInProgress responseInProgress)
+    public async Task<ITodoCommand> CreateCommandAsync(TodoDto dto, IAddTodoResponseInProgress responseInProgress)
     {
       return new AddTodoCommand(dto, _idGenerator, responseInProgress, _todoRepository);
     }
 
-    public ITodoCommand CreateCommand(LinkTodoDto dto, ILinkTodoResponseInProgress responseInProgress)
+    public async Task<ITodoCommand> CreateCommandAsync(LinkTodoDto dto, ILinkTodoResponseInProgress responseInProgress)
     {
-      throw new System.NotImplementedException();
+      return new LinkTodoCommand(await _todoRepository.ReadAsync(dto.Id1), await _todoRepository.ReadAsync(dto.Id2));
     }
   }
 }
