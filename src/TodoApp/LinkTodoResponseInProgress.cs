@@ -10,5 +10,10 @@ namespace TodoApp
     {
       throw new System.NotImplementedException();
     }
+
+    public void LinkedSuccessfully(TodoCreatedDto todo1, TodoCreatedDto todo2)
+    {
+      throw new System.NotImplementedException();
+    }
   }
 }

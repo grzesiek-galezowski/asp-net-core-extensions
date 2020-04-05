@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TodoApp.Logic.App
@@ -7,21 +8,20 @@ namespace TodoApp.Logic.App
     private readonly TodoDto _dto;
     private readonly IIdGenerator _idGenerator;
     private readonly IAddTodoResponseInProgress _responseInProgress;
-    private readonly ITodoRepository _todoRepository;
+    private readonly IUserTodos _userTodos;
 
-    public AddTodoCommand(
-      TodoDto dto, 
-      IIdGenerator idGenerator, 
-      IAddTodoResponseInProgress addTodoResponseInProgress, 
-      ITodoRepository todoRepository)
+    public AddTodoCommand(TodoDto dto,
+      IIdGenerator idGenerator,
+      IUserTodos userTodos,
+      IAddTodoResponseInProgress addTodoResponseInProgress)
     {
       _idGenerator = idGenerator;
       _responseInProgress = addTodoResponseInProgress;
       _dto = dto;
-      _todoRepository = todoRepository;
+      _userTodos = userTodos;
     }
 
-    public async Task ExecuteAsync()
+    public async Task ExecuteAsync(CancellationToken cancellationToken)
     {
       var id = _idGenerator.Generate();
 
@@ -32,7 +32,7 @@ namespace TodoApp.Logic.App
         Id = id
       };
       
-      await _todoRepository.SaveAsync(todoCreatedDto);
+      await _userTodos.SaveAsync(todoCreatedDto, cancellationToken);
       await _responseInProgress.SuccessAsync(todoCreatedDto);
     }
   }

@@ -1,7 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using TodoApp.Bootstrap;
 using TodoApp.Logic.App;
 
 namespace TodoApp
@@ -17,6 +17,7 @@ namespace TodoApp
   {
     public Task<TodoDto> ParseAsync(HttpRequest request)
     {
+
       return JsonSerializer.DeserializeAsync<TodoDto>(request.Body).AsTask();
     }
 

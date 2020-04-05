@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -15,11 +16,11 @@ namespace TodoApp
       _nestedAction = nestedAction;
     }
 
-    public Task ExecuteAsync(HttpRequest request, HttpResponse response)
+    public Task ExecuteAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
     {
       if (request.Headers["authorization"] == "Bearer " + RequiredToken)
       {
-        return _nestedAction.ExecuteAsync(request, response);
+        return _nestedAction.ExecuteAsync(request, response, cancellationToken);
       }
       else
       {

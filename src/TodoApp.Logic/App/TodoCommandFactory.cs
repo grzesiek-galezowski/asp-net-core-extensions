@@ -4,7 +4,7 @@ namespace TodoApp.Logic.App
 {
   public interface ITodoCommandFactory<in TDto, in TResponse>
   {
-    Task<ITodoCommand> CreateCommandAsync(TDto dto, TResponse responseInProgress);
+    ITodoCommand CreateCommand(TDto dto, TResponse responseInProgress);
   }
 
   public class TodoCommandFactory : 
@@ -12,22 +12,22 @@ namespace TodoApp.Logic.App
     ITodoCommandFactory<LinkTodoDto, ILinkTodoResponseInProgress>
   {
     private readonly IIdGenerator _idGenerator;
-    private readonly ITodoRepository _todoRepository;
+    private readonly IUserTodos _userTodos;
 
-    public TodoCommandFactory(IIdGenerator idGenerator, ITodoRepository todoRepository)
+    public TodoCommandFactory(IIdGenerator idGenerator, IUserTodos userTodos)
     {
       _idGenerator = idGenerator;
-      _todoRepository = todoRepository;
+      _userTodos = userTodos;
     }
 
-    public async Task<ITodoCommand> CreateCommandAsync(TodoDto dto, IAddTodoResponseInProgress responseInProgress)
+    public ITodoCommand CreateCommand(TodoDto dto, IAddTodoResponseInProgress responseInProgress)
     {
-      return new AddTodoCommand(dto, _idGenerator, responseInProgress, _todoRepository);
+      return new AddTodoCommand(dto, _idGenerator, _userTodos, responseInProgress);
     }
 
-    public async Task<ITodoCommand> CreateCommandAsync(LinkTodoDto dto, ILinkTodoResponseInProgress responseInProgress)
+    public ITodoCommand CreateCommand(LinkTodoDto dto, ILinkTodoResponseInProgress responseInProgress)
     {
-      return new LinkTodoCommand(await _todoRepository.ReadAsync(dto.Id1), await _todoRepository.ReadAsync(dto.Id2));
+      return new LinkTodoCommand(_userTodos, dto.Id1, dto.Id2, responseInProgress);
     }
   }
 }

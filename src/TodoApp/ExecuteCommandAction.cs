@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using TodoApp.Logic.App;
@@ -20,13 +21,14 @@ namespace TodoApp
           _responseInProgressFactory = responseInProgressFactory;
         }
 
-        public async Task ExecuteAsync(HttpRequest request, HttpResponse response)
+        public async Task ExecuteAsync(HttpRequest request, HttpResponse response,
+          CancellationToken cancellationToken)
         {
           //bug cancellation token
-            var dto = await _requestParser.ParseAsync(request);
-            var responseInProgress = _responseInProgressFactory.CreateResponseInProgress(response);
-            var command = await _todoCommandFactory.CreateCommandAsync(dto, responseInProgress);
-            await command.ExecuteAsync();
+          var dto = await _requestParser.ParseAsync(request);
+          var responseInProgress = _responseInProgressFactory.CreateResponseInProgress(response);
+          var command = _todoCommandFactory.CreateCommand(dto, responseInProgress);
+          await command.ExecuteAsync(cancellationToken);
         }
     }
 }

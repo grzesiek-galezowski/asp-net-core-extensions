@@ -10,7 +10,7 @@ namespace TodoApp.Bootstrap
     public ServiceLogicRoot()
     {
       var requestParser = new RequestParser();
-      var commandFactory = new TodoCommandFactory(new IdGenerator(), new TodoRepository());
+      var commandFactory = new TodoCommandFactory(new IdGenerator(), new UserTodos());
       var responseInProgressFactory = new ResponseInProgressFactory();
       
       _addTodoAction = new TokenValidationAction(

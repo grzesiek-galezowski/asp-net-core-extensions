@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Threading;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
@@ -26,14 +27,16 @@ namespace TodoAppSpecification
         .WithOAuthBearerToken(TokenValidationAction.RequiredToken)
         .RealInstance;
       var realInstance = contextMock.Response().RealInstance;
+      var cancellationToken = Any.Instance<CancellationToken>();
 
       //WHEN
       tokenValidationAction.ExecuteAsync(
         request,
-        realInstance);
+        realInstance,
+        cancellationToken);
 
       //THEN
-      innerAction.Received(1).ExecuteAsync(request, realInstance);
+      innerAction.Received(1).ExecuteAsync(request, realInstance, cancellationToken);
     }
 
     [Test]
@@ -43,6 +46,7 @@ namespace TodoAppSpecification
       var innerAction = Substitute.For<IAsyncAction>();
       var tokenValidationAction = new TokenValidationAction(innerAction);
       var contextMock = HttpContextMock.Default();
+      var cancellationToken = Any.Instance<CancellationToken>();
       var request = contextMock.Request()
         .WithOAuthBearerToken(Any.OtherThan(TokenValidationAction.RequiredToken))
         .RealInstance;
@@ -50,10 +54,12 @@ namespace TodoAppSpecification
       //WHEN
       tokenValidationAction.ExecuteAsync(
         request,
-        contextMock.Response().RealInstance);
+        contextMock.Response().RealInstance,
+        cancellationToken
+        );
 
       //THEN
-      innerAction.DidNotReceiveWithAnyArgs().ExecuteAsync(default, default);
+      innerAction.DidNotReceiveWithAnyArgs().ExecuteAsync(default, default, default);
       contextMock.Response().Should().HaveStatusCode(HttpStatusCode.Unauthorized);
     }
   }

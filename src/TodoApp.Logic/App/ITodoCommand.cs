@@ -1,9 +1,10 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace TodoApp.Logic.App
 {
   public interface ITodoCommand
   {
-    Task ExecuteAsync();
+    Task ExecuteAsync(CancellationToken cancellationToken);
   }
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using NSubstitute;
 using NUnit.Framework;
@@ -18,7 +19,7 @@ namespace TodoAppSpecification
       var idGenerator = Substitute.For<IIdGenerator>();
       var action = new ExecuteCommandAction<TodoDto, IAddTodoResponseInProgress>(
         new RequestParser(),
-        new TodoCommandFactory(idGenerator, new TodoRepository()),
+        new TodoCommandFactory(idGenerator, new UserTodos()),
         new ResponseInProgressFactory());
       var id = Any.String();
       var context = HttpContextMock.Default();
@@ -33,7 +34,8 @@ namespace TodoAppSpecification
 
       await action.ExecuteAsync(
           httpRequest, 
-          httpResponse);
+          httpResponse,
+          Any.Instance<CancellationToken>());
 
       //THEN
       context.Response().Should().HaveBody(new TodoCreatedDto
