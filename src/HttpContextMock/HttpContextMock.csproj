@@ -5,7 +5,7 @@
     <AssemblyName>TddXt.HttpContextMock</AssemblyName>
     <RootNamespace>TddXt.HttpContextMock</RootNamespace>
     <Nullable>enable</Nullable>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Authors>Grzegorz Gałęzowski</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>A mock for HttpContext allowing to setup HttpRequest and verify HttpResponse</Description>
@@ -14,6 +14,7 @@
     <RepositoryUrl>https://github.com/grzesiek-galezowski/asp-net-core-extensions</RepositoryUrl>
     <Copyright>Grzegorz Gałęzowski 2020</Copyright>
     <RepositoryType>git</RepositoryType>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

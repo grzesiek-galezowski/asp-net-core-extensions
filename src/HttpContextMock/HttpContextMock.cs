@@ -22,14 +22,7 @@ namespace TddXt.HttpContextMock
       _serialization = serialization;
     }
 
-    public HttpRequestMock Request()
-    {
-      return new HttpRequestMock(RealInstance.Request, _serialization);
-    }
-
-    public HttpResponseMock Response()
-    {
-      return new HttpResponseMock(RealInstance.Response, _serialization);
-    }
+    public HttpRequestMock Request() => new(RealInstance.Request, _serialization);
+    public HttpResponseMock Response() => new(RealInstance.Response, _serialization);
   }
 }

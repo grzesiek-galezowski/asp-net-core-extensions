@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Extensions.Primitives;
 using TddXt.HttpContextMock.Internal;
 
 namespace TddXt.HttpContextMock
@@ -19,15 +21,25 @@ namespace TddXt.HttpContextMock
       _serialization = serialization;
     }
 
-    public HttpRequestMock SetStringBody(string content)
+    public HttpRequestMock WithStringBody(string content)
     {
-      RealInstance.Body = new MemoryStream(Encoding.UTF8.GetBytes(content));
+      return WithBytesBody(Encoding.UTF8.GetBytes(content));
+    }
+
+    public HttpRequestMock WithJsonBody<T>(T dto)
+    {
+      return WithContentType(MediaTypeNames.Application.Json).WithStringBody(_serialization.Serialize(dto));
+    }
+    
+    public HttpRequestMock WithBytesBody(byte[] content)
+    {
+      RealInstance.Body = new MemoryStream(content);
       return this;
     }
 
-    public HttpRequestMock SetPlainTextBody(string content)
+    public HttpRequestMock WithPlainTextBody(string content)
     {
-      return SetContentType(MediaTypeNames.Text.Plain).SetStringBody(content);
+      return WithContentType(MediaTypeNames.Text.Plain).WithStringBody(content);
     }
 
     public HttpRequestMock AppendPathSegment(string segment)
@@ -51,16 +63,16 @@ namespace TddXt.HttpContextMock
       return WithHeader("authorization", $"{type} {content}");
     }
 
-    public HttpRequestMock SetQueryParams(object o)
+    public HttpRequestMock WithQueryParams(object o)
     {
       foreach (var propertyInfo in o.GetType().GetProperties())
       {
-        SetQueryParam(propertyInfo.Name, propertyInfo.GetValue(o).ToString());
+        WithQueryParam(propertyInfo.Name, propertyInfo.GetValue(o).ToString());
       }
       return this;
     }
 
-    public HttpRequestMock SetQueryParam(string key, string value)
+    public HttpRequestMock WithQueryParam(string key, string value)
     {
       RealInstance.QueryString = RealInstance.QueryString.Add(key, value);
       return this;
@@ -83,46 +95,41 @@ namespace TddXt.HttpContextMock
 
     public HttpRequestMock PostJson<T>(T dto)
     {
-      return SetJsonBody(dto).SetMethod(HttpMethods.Post);
+      return WithJsonBody(dto).WithMethod(HttpMethods.Post);
     }
     
     public HttpRequestMock PostPlainText(string text)
     {
-      return SetPlainTextBody(text).SetMethod(HttpMethods.Post);
+      return WithPlainTextBody(text).WithMethod(HttpMethods.Post);
     }
 
     public HttpRequestMock PutJson<T>(T dto)
     {
-      return SetJsonBody(dto).SetMethod(HttpMethods.Put);
+      return WithJsonBody(dto).WithMethod(HttpMethods.Put);
     }
 
     public HttpRequestMock Put()
     {
-      return SetMethod(HttpMethods.Put);
+      return WithMethod(HttpMethods.Put);
     }
 
     public HttpRequestMock Post()
     {
-      return SetMethod(HttpMethods.Post);
+      return WithMethod(HttpMethods.Post);
     }
 
     public HttpRequestMock Get()
     {
-      return SetMethod(HttpMethods.Get);
+      return WithMethod(HttpMethods.Get);
     }
 
-    private HttpRequestMock SetMethod(string method)
+    private HttpRequestMock WithMethod(string method)
     {
       RealInstance.Method = method;
       return this;
     }
 
-    public HttpRequestMock SetJsonBody<T>(T dto)
-    {
-      return SetContentType(MediaTypeNames.Application.Json).SetStringBody(_serialization.Serialize(dto));
-    }
-
-    public HttpRequestMock SetContentType(string requestContentType)
+    public HttpRequestMock WithContentType(string requestContentType)
     {
       RealInstance.ContentType = requestContentType;
       return this;
@@ -156,6 +163,23 @@ namespace TddXt.HttpContextMock
     public HttpRequestMock Https()
     {
       RealInstance.IsHttps = true;
+      return this;
+    }
+
+    public HttpRequestMock WithQuery(Dictionary<string, StringValues> dictionary)
+    {
+      return WithQuery(new QueryCollection(dictionary));
+    }
+
+    public HttpRequestMock WithQuery(QueryCollection queryCollection)
+    {
+      RealInstance.Query = queryCollection;
+      return this;
+    }
+
+    public HttpRequestMock RewindBody()
+    {
+      RealInstance.Body.Position = 0;
       return this;
     }
   }
