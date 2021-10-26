@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Mime;
-using System.Text;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using TddXt.AnyRoot.Collections;
 using TddXt.AnyRoot.Strings;
 using TddXt.HttpContextMock;
-using Microsoft.AspNetCore.Http;
 using static TddXt.AnyRoot.Root;
 
 namespace HttpContextMockSpecification
@@ -53,11 +50,11 @@ namespace HttpContextMockSpecification
       var content = Any.Array<byte>(3);
       httpContextMock.Request().WithBytesBody(content);
 
-      var result = new List<int>
+      var result = new List<byte>
       {
-        httpContextMock.Request().RealInstance.Body.ReadByte(),
-        httpContextMock.Request().RealInstance.Body.ReadByte(),
-        httpContextMock.Request().RealInstance.Body.ReadByte()
+        (byte)httpContextMock.Request().RealInstance.Body.ReadByte(),
+        (byte)httpContextMock.Request().RealInstance.Body.ReadByte(),
+        (byte)httpContextMock.Request().RealInstance.Body.ReadByte()
       };
       result.Should().Equal(content);
       httpContextMock.Request().RealInstance.Body.Length.Should().Be(3);

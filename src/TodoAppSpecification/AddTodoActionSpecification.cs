@@ -1,49 +1,47 @@
+using System;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using NSubstitute;
 using NUnit.Framework;
-using TddXt.AnyRoot.Strings;
+using TddXt.AnyRoot;
 using TddXt.HttpContextMock;
-using TodoApp;
-using TodoApp.Logic.App;
+using TodoApp.Db;
+using TodoApp.Http;
+using TodoApp.Logic;
 using static TddXt.AnyRoot.Root;
 
-namespace TodoAppSpecification
+namespace TodoAppSpecification;
+
+public class AddTodoActionSpecification
 {
-  public class AddTodoActionSpecification
+  [Test]
+  public async Task ShouldRespondToPostTodoWithTodoCreated()
   {
-    [Test]
-    public async Task ShouldRespondToPostTodoWithTodoCreated()
+    //GIVEN
+    var idGenerator = Substitute.For<IIdGenerator>();
+    var action = new ExecutingCommandEndpoint<CreateTodoRequestData, IAddTodoResponseInProgress>(
+      new JsonDocumentBasedRequestParser(),
+      new TodoCommandFactory(idGenerator, new UserTodosDao()),
+      new ResponseInProgressFactory());
+    var id = Any.Guid();
+    var context = HttpContextMock.Default();
+    var httpRequest = context.Request().PostJson(new 
     {
-      //GIVEN
-      var idGenerator = Substitute.For<IIdGenerator>();
-      var action = new ExecuteCommandAction<TodoDto, IAddTodoResponseInProgress>(
-        new RequestParser(),
-        new TodoCommandFactory(idGenerator, new UserTodos()),
-        new ResponseInProgressFactory());
-      var id = Any.String();
-      var context = HttpContextMock.Default();
-      var httpRequest = context.Request().PostJson(new TodoDto
-      {
-        Title = "a",
-        Content = "b"
-      }).RealInstance;
-      var httpResponse = context.Response().RealInstance;
+      title = "a",
+      content = "b"
+    }).RealInstance;
+    var httpResponse = context.Response().RealInstance;
 
-      idGenerator.Generate().Returns(id);
+    idGenerator.Generate().Returns(id);
 
-      await action.ExecuteAsync(
-          httpRequest, 
-          httpResponse,
-          Any.Instance<CancellationToken>());
+    await action.ExecuteAsync(
+      httpRequest, 
+      httpResponse,
+      new CancellationToken());
 
-      //THEN
-      context.Response().Should().HaveBody(new TodoCreatedDto
-      {
-        Title = "a",
-        Content = "b",
-        Id = id
-      });
-    }
+    //THEN
+    context.Response().Should().HaveBody(
+      new TodoCreatedData(id, "a", "b", ImmutableHashSet<Guid>.Empty));
   }
 }

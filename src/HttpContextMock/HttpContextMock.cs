@@ -1,5 +1,9 @@
+using System.ComponentModel.Design;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace TddXt.HttpContextMock
 {
@@ -11,8 +15,17 @@ namespace TddXt.HttpContextMock
 
     public static HttpContextMock Default()
     {
-      var defaultHttpContext = new DefaultHttpContext();
-      defaultHttpContext.Response.Body = new MemoryStream();
+      var serviceCollection = new ServiceCollection()
+        .AddSingleton<ILoggerFactory>(ctx => new LoggerFactory());
+      var defaultHttpContext = new DefaultHttpContext
+      {
+        Response =
+        {
+          Body = new MemoryStream()
+        },
+        RequestServices = serviceCollection.BuildServiceProvider()
+      };
+
       return new HttpContextMock(defaultHttpContext, new SystemTextJsonSerialization());
     }
 

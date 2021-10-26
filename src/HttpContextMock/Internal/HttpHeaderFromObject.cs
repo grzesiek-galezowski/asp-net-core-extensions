@@ -1,8 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Reflection;
-using Microsoft.Extensions.Primitives;
 
 namespace TddXt.HttpContextMock.Internal
 {

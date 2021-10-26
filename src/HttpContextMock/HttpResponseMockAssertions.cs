@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using FluentAssertions;
 using FluentAssertions.Primitives;
 using Microsoft.Extensions.Primitives;
@@ -12,8 +11,8 @@ namespace TddXt.HttpContextMock
   public class HttpResponseMockAssertions : ReferenceTypeAssertions<HttpResponseMock, HttpResponseMockAssertions>
   {
     public HttpResponseMockAssertions(HttpResponseMock instance)
+    : base(instance)
     {
-      Subject = instance;
     }
 
     public AndConstraint<HttpResponseMockAssertions> ContainHeader(string key, string value)
