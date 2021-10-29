@@ -1,4 +1,3 @@
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -16,11 +15,11 @@ public class TokenValidatingEndpoint : IAsyncEndpoint
     _nestedAction = nestedAction;
   }
 
-  public async Task ExecuteAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
+  public async Task HandleAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
   {
     if (request.Headers["authorization"] == "Bearer " + RequiredToken)
     {
-      await _nestedAction.ExecuteAsync(request, response, cancellationToken);
+      await _nestedAction.HandleAsync(request, response, cancellationToken);
     }
     else
     {

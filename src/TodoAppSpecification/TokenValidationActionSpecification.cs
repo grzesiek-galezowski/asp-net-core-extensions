@@ -25,13 +25,13 @@ class TokenValidationActionSpecification
     var cancellationToken = Any.Instance<CancellationToken>();
 
     //WHEN
-    tokenValidationAction.ExecuteAsync(
+    tokenValidationAction.HandleAsync(
       request,
       realInstance,
       cancellationToken);
 
     //THEN
-    innerAction.Received(1).ExecuteAsync(request, realInstance, cancellationToken);
+    innerAction.Received(1).HandleAsync(request, realInstance, cancellationToken);
   }
 
   [Test]
@@ -47,14 +47,14 @@ class TokenValidationActionSpecification
       .RealInstance;
 
     //WHEN
-    tokenValidationAction.ExecuteAsync(
+    tokenValidationAction.HandleAsync(
       request,
       contextMock.Response().RealInstance,
       cancellationToken
     );
 
     //THEN
-    innerAction.DidNotReceiveWithAnyArgs().ExecuteAsync(default, default, default);
+    innerAction.DidNotReceiveWithAnyArgs().HandleAsync(default, default, default);
     contextMock.Response().Should().HaveStatusCode(HttpStatusCode.Unauthorized);
   }
 }

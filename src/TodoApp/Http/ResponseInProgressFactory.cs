@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
-using TodoApp.Logic;
+using TodoApp.Logic.AddTodo;
+using TodoApp.Logic.LinkTodos;
 
 namespace TodoApp.Http;
 

@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using NSubstitute;
 using NUnit.Framework;
-using TddXt.AnyRoot;
 using TddXt.HttpContextMock;
-using TodoApp.Db;
-using TodoApp.Http;
-using TodoApp.Logic;
-using static TddXt.AnyRoot.Root;
+using TodoApp.Bootstrap;
 
 namespace TodoAppSpecification;
 
@@ -19,29 +12,25 @@ public class AddTodoActionSpecification
   public async Task ShouldRespondToPostTodoWithTodoCreated()
   {
     //GIVEN
-    var idGenerator = Substitute.For<IIdGenerator>();
-    var action = new ExecutingCommandEndpoint<CreateTodoRequestData, IAddTodoResponseInProgress>(
-      new JsonDocumentBasedRequestParser(),
-      new TodoCommandFactory(idGenerator, new UserTodosDao()),
-      new ResponseInProgressFactory());
-    var id = Any.Guid();
+    await using var serviceLogicRoot = new ServiceLogicRoot();
     var context = HttpContextMock.Default();
-    var httpRequest = context.Request().PostJson(new 
+    var dto = new 
     {
       title = "a",
       content = "b"
-    }).RealInstance;
+    };
+    var httpRequest = context.Request()
+      .WithHeader("Authorization", "Bearer trolololo")
+      .PostJson(dto)
+      .RealInstance;
     var httpResponse = context.Response().RealInstance;
 
-    idGenerator.Generate().Returns(id);
-
-    await action.ExecuteAsync(
+    await serviceLogicRoot.AddTodoEndpoint.HandleAsync(
       httpRequest, 
       httpResponse,
       new CancellationToken());
 
     //THEN
-    context.Response().Should().HaveBody(
-      new TodoCreatedData(id, "a", "b", ImmutableHashSet<Guid>.Empty));
+    context.Response().Should().HaveBody(dto);
   }
 }

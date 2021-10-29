@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace TodoApp.Logic;
+namespace TodoApp.Logic.AddTodo;
 
 public interface IAddTodoResponseInProgress
 {

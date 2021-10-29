@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+using LiteDB.Engine;
 using TodoApp.Db;
 using TodoApp.Http;
 using TodoApp.Logic;
@@ -5,39 +8,30 @@ using TodoApp.Random;
 
 namespace TodoApp.Bootstrap;
 
-public class ServiceLogicRoot
+public class ServiceLogicRoot : IAsyncDisposable
 {
-  private readonly IAsyncEndpoint _addTodoAction;
-  private readonly IAsyncEndpoint _linkTodoAction;
+  private readonly TempStream _tempStream;
+  private readonly EndpointsAdapter _endpointsAdapter;
 
   public ServiceLogicRoot()
   {
-    var requestParser = new JsonDocumentBasedRequestParser();
-    var commandFactory = new TodoCommandFactory(new IdGenerator(), new UserTodosDao());
-    var responseInProgressFactory = new ResponseInProgressFactory();
-      
-    _addTodoAction = new TokenValidatingEndpoint(
-      new ExecutingCommandEndpoint<CreateTodoRequestData, IAddTodoResponseInProgress>(
-        requestParser, 
-        commandFactory, 
-        responseInProgressFactory));
+    _tempStream = new TempStream();
 
-    _linkTodoAction = new TokenValidatingEndpoint(
-      new ExecutingCommandEndpoint<LinkTodosRequestData, ILinkTodoResponseInProgress>(
-        requestParser, 
-        commandFactory, 
-        responseInProgressFactory));
-
-
+    var appLogicRoot = new AppLogicRoot(
+      new UserTodosDao(_tempStream),
+      new IdGenerator());
+    var endpointsAdapter = new EndpointsAdapter(
+      appLogicRoot.CommandFactory,
+      appLogicRoot.CommandFactory);
+    _endpointsAdapter = endpointsAdapter;
   }
 
-  public IAsyncEndpoint AddTodoAction()
-  {
-    return _addTodoAction;
-  }
+  public IAsyncEndpoint AddTodoEndpoint => _endpointsAdapter.AddTodoEndpoint;
+  public IAsyncEndpoint LinkTodoEndpoint => _endpointsAdapter.LinkTodoEndpoint;
 
-  public IAsyncEndpoint LinkTodoAction()
+  public ValueTask DisposeAsync()
   {
-    return _linkTodoAction;
+    _tempStream.Dispose();
+    return ValueTask.CompletedTask;
   }
 }

@@ -1,7 +1,8 @@
-using System.Text.Json;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using TodoApp.Logic;
+using TodoApp.Logic.AddTodo;
 
 namespace TodoApp.Http;
 
@@ -18,5 +19,6 @@ public class AddTodoResponseInProgress : IAddTodoResponseInProgress
   {
     var result = Results.Ok(todoCreatedData);
     await result.ExecuteAsync(_response.HttpContext);
+    Console.WriteLine(_response.HttpContext);
   }
 }

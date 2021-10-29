@@ -1,9 +1,7 @@
-using System.ComponentModel.Design;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace TddXt.HttpContextMock
 {

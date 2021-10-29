@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TodoApp.Logic;
+namespace TodoApp.Logic.AddTodo;
 
 public class AddTodoCommand : ITodoCommand
 {

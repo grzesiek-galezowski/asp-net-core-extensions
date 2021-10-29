@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TodoApp.Logic;
+namespace TodoApp.Logic.LinkTodos;
 
 public class LinkTodoCommand : ITodoCommand
 {
@@ -25,7 +25,6 @@ public class LinkTodoCommand : ITodoCommand
     var todo1 = await _userTodos.LoadAsync(_id1, cancellationToken);
     var todo2 = await _userTodos.LoadAsync(_id2, cancellationToken);
     todo1 = todo1 with { Links = todo1.Links.Add(todo2.Id)};
-    await _userTodos.SaveAsync(todo1, cancellationToken);
-    _responseInProgress.LinkedSuccessfully(todo1, todo2);
+    await _responseInProgress.LinkedSuccessfully(todo1, todo2, cancellationToken);
   }
 }

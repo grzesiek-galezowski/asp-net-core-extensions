@@ -1,44 +1,43 @@
 using System;
 using System.Collections.Immutable;
-using System.Linq;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using NullableReferenceTypesExtensions;
+using LiteDB;
 using TodoApp.Logic;
 
 namespace TodoApp.Db;
 
 public class UserTodosDao : IUserTodosDao
 {
-  private readonly TodoContext _todoContext;
+  private readonly Stream _stream;
 
-  public UserTodosDao()
+  public UserTodosDao(Stream stream)
   {
-    _todoContext = new TodoContext(); //bug should live longer/shorter?
+    _stream = stream;
   }
 
   public async Task SaveAsync(TodoCreatedData todoData, CancellationToken cancellationToken)
   {
-    var linkedDtos = await _todoContext.Todos.Where(todo=> todoData.Links.Contains(todo.Id.Value)).ToArrayAsync(cancellationToken);
-    var persistentTodoDto = new PersistentTodoDto
-    {
-      Id = todoData.Id,
-      Content = todoData.Content,
-      LinkedNotes = linkedDtos,
-      Title = todoData.Title
-    };
-    await _todoContext.Todos.AddAsync(persistentTodoDto, cancellationToken).AsTask();
-    await _todoContext.SaveChangesAsync(cancellationToken);
+    using var liteDb = new LiteDatabase(_stream);
+    liteDb.GetCollection<PersistentTodoDto>().Insert(
+      new PersistentTodoDto
+      {
+        Id = todoData.Id,
+        Content = todoData.Content,
+        LinkedNotes = new Guid[] { },
+        Title = todoData.Title
+      });
   }
 
   public async Task<TodoCreatedData> LoadAsync(Guid id, CancellationToken cancellationToken)
   {
-    var persistentTodoDto = await _todoContext.Todos.FindAsync(id, cancellationToken);
+    using var liteDb = new LiteDatabase(_stream);
+    var persistentTodoDto = liteDb.GetCollection<PersistentTodoDto>().FindById(id);
     return new TodoCreatedData(
       persistentTodoDto.Id.Value, 
-      persistentTodoDto.Title.OrThrow(), 
-      persistentTodoDto.Content.OrThrow(),
-      persistentTodoDto.LinkedNotes.OrThrow().Select(n => n.Id.Value).ToImmutableHashSet());
+      persistentTodoDto.Title, 
+      persistentTodoDto.Content, 
+      persistentTodoDto.LinkedNotes.ToImmutableHashSet());
   }
 }

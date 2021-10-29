@@ -6,5 +6,5 @@ namespace TodoApp.Http;
 
 public interface IAsyncEndpoint
 {
-  Task ExecuteAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken);
+  Task HandleAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken);
 }
