@@ -2,18 +2,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using TodoApp.Logic;
+using TodoApp.Logic.TodoNotes;
 
 namespace TodoApp.Http;
 
 public class ExecutingCommandEndpoint<TDto, TResponse> : IAsyncEndpoint
 {
   private readonly IRequestParser<TDto> _requestParser;
-  private readonly ITodoCommandFactory<TDto, TResponse> _todoCommandFactory;
+  private readonly ICommandFactory<TDto, TResponse> _todoCommandFactory;
   private readonly IResponseInProgressFactory<TResponse> _responseInProgressFactory;
 
   public ExecutingCommandEndpoint(
     IRequestParser<TDto> requestParser, 
-    ITodoCommandFactory<TDto, TResponse> todoCommandFactory, 
+    ICommandFactory<TDto, TResponse> todoCommandFactory, 
     IResponseInProgressFactory<TResponse> responseInProgressFactory)
   {
     _requestParser = requestParser;

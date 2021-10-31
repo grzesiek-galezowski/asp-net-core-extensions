@@ -2,9 +2,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TodoApp.Logic.LinkTodos;
+namespace TodoApp.Logic.TodoNotes.LinkTodos;
 
-public class LinkTodoCommand : ITodoCommand
+public class LinkTodoCommand : IAppCommand
 {
   private readonly IUserTodosDao _userTodos;
   private readonly Guid _id1;

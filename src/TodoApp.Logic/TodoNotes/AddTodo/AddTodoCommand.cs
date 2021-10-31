@@ -3,9 +3,9 @@ using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TodoApp.Logic.AddTodo;
+namespace TodoApp.Logic.TodoNotes.AddTodo;
 
-public class AddTodoCommand : ITodoCommand
+public class AddTodoCommand : IAppCommand
 {
   private readonly CreateTodoRequestData _requestData;
   private readonly IIdGenerator _idGenerator;
@@ -26,15 +26,7 @@ public class AddTodoCommand : ITodoCommand
   public async Task ExecuteAsync(CancellationToken cancellationToken)
   {
     var id = _idGenerator.Generate();
-
-    var todoCreatedDto = new TodoCreatedData(
-      Title: _requestData.Title, 
-      Content: _requestData.Content, 
-      Links: ImmutableHashSet<Guid>.Empty,
-      Id: id);
-
-      
-    await _userTodos.SaveAsync(todoCreatedDto, cancellationToken);
-    await _responseInProgress.SuccessAsync(todoCreatedDto);
+    await _userTodos.SaveAsync(id, _requestData, cancellationToken);
+    await _responseInProgress.SuccessAsync(id);
   }
 }

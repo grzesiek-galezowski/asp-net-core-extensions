@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TodoApp.Logic;
+namespace TodoApp.Logic.TodoNotes;
 
-public interface ITodoCommand
+public interface IAppCommand
 {
   Task ExecuteAsync(CancellationToken cancellationToken);
 }

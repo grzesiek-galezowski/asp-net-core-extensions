@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using TodoApp.Logic;
-using TodoApp.Logic.AddTodo;
+using TodoApp.Logic.TodoNotes.AddTodo;
 
 namespace TodoApp.Http;
 
@@ -15,9 +15,9 @@ public class AddTodoResponseInProgress : IAddTodoResponseInProgress
     _response = response;
   }
 
-  public async Task SuccessAsync(TodoCreatedData todoCreatedData)
+  public async Task SuccessAsync(Guid id)
   {
-    var result = Results.Ok(todoCreatedData);
+    var result = Results.Ok(id);
     await result.ExecuteAsync(_response.HttpContext);
     Console.WriteLine(_response.HttpContext);
   }

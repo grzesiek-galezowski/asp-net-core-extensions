@@ -1,8 +1,12 @@
+using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions;
 using NUnit.Framework;
 using TddXt.HttpContextMock;
 using TodoApp.Bootstrap;
+using TodoApp.Logic;
 
 namespace TodoAppSpecification;
 
@@ -19,18 +23,17 @@ public class AddTodoActionSpecification
       title = "a",
       content = "b"
     };
-    var httpRequest = context.Request()
-      .WithHeader("Authorization", "Bearer trolololo")
-      .PostJson(dto)
-      .RealInstance;
-    var httpResponse = context.Response().RealInstance;
-
+    
     await serviceLogicRoot.AddTodoEndpoint.HandleAsync(
-      httpRequest, 
-      httpResponse,
+      context.Request()
+        .WithHeader("Authorization", "Bearer trolololo")
+        .PostJson(dto)
+        .RealInstance, 
+      context.Response().RealInstance,
       new CancellationToken());
 
     //THEN
-    context.Response().Should().HaveBody(dto);
+    context.Response().Should().HaveStatusCode(HttpStatusCode.OK);
+    context.Response().BodyObject<Guid>().ToString().Should().NotBeEmpty();
   }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using LiteDB.Engine;
 using TodoApp.Db;
@@ -10,7 +11,7 @@ namespace TodoApp.Bootstrap;
 
 public class ServiceLogicRoot : IAsyncDisposable
 {
-  private readonly TempStream _tempStream;
+  private readonly Stream _tempStream;
   private readonly EndpointsAdapter _endpointsAdapter;
 
   public ServiceLogicRoot()
@@ -19,15 +20,20 @@ public class ServiceLogicRoot : IAsyncDisposable
 
     var appLogicRoot = new AppLogicRoot(
       new UserTodosDao(_tempStream),
-      new IdGenerator());
+      new IdGenerator(), 
+      new UsersDao(_tempStream));
     var endpointsAdapter = new EndpointsAdapter(
-      appLogicRoot.CommandFactory,
-      appLogicRoot.CommandFactory);
+      appLogicRoot.TodoCommandFactory,
+      appLogicRoot.TodoCommandFactory,
+      appLogicRoot.UserCommandFactory,
+      appLogicRoot.UserCommandFactory);
     _endpointsAdapter = endpointsAdapter;
   }
 
   public IAsyncEndpoint AddTodoEndpoint => _endpointsAdapter.AddTodoEndpoint;
   public IAsyncEndpoint LinkTodoEndpoint => _endpointsAdapter.LinkTodoEndpoint;
+  public IAsyncEndpoint RegisterUserEndpoint => _endpointsAdapter.RegisterUserEndpoint;
+  public IAsyncEndpoint LoginUserEndpoint => _endpointsAdapter.LoginUserEndpoint;
 
   public ValueTask DisposeAsync()
   {

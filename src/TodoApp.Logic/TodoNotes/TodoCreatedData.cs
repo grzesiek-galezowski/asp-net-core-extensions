@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Immutable;
 
-namespace TodoApp.Logic;
+namespace TodoApp.Logic.TodoNotes;
 
 public record TodoCreatedData(
   Guid Id, 

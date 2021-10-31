@@ -1,13 +1,20 @@
+using TodoApp.Logic.TodoNotes;
+using TodoApp.Logic.Users;
+
 namespace TodoApp.Logic;
 
 public class AppLogicRoot
 {
-  public TodoCommandFactory CommandFactory { get; }
+  public TodoCommandFactory TodoCommandFactory { get; }
+  public UserCommandFactory UserCommandFactory { get; }
 
-  public AppLogicRoot(IUserTodosDao userTodosDao, IIdGenerator idGenerator)
+  public AppLogicRoot(IUserTodosDao userTodosDao, IIdGenerator idGenerator, IUsersDao usersDao)
   {
-    CommandFactory = new TodoCommandFactory(
+    TodoCommandFactory = new TodoCommandFactory(
       idGenerator, 
       userTodosDao);
+    UserCommandFactory = new UserCommandFactory(
+      idGenerator,
+      usersDao);
   }
 }

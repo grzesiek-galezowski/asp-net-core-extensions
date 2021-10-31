@@ -10,6 +10,18 @@ builder.Services.AddSingleton(ctx => new ServiceLogicRoot());
 
 var app = builder.Build();
 
+app.MapPost("/users/registration",
+  async ([FromServices] ServiceLogicRoot root, HttpRequest request, HttpResponse response, CancellationToken token) =>
+  {
+    await root.RegisterUserEndpoint.HandleAsync(request, response, token);
+  });
+
+app.MapPost("/users/login",
+  async ([FromServices] ServiceLogicRoot root, HttpRequest request, HttpResponse response, CancellationToken token) =>
+  {
+    await root.LoginUserEndpoint.HandleAsync(request, response, token);
+  });
+
 app.MapPost("/todo",
   async ([FromServices] ServiceLogicRoot root, HttpRequest request, HttpResponse response, CancellationToken token) =>
   {

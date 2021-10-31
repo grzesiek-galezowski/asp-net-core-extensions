@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
-using TodoApp.Logic.AddTodo;
-using TodoApp.Logic.LinkTodos;
+using TodoApp.Logic.TodoNotes.AddTodo;
+using TodoApp.Logic.TodoNotes.LinkTodos;
+using TodoApp.Logic.Users;
 
 namespace TodoApp.Http;
 
@@ -11,15 +12,30 @@ public interface IResponseInProgressFactory<T>
 
 public class ResponseInProgressFactory : 
   IResponseInProgressFactory<IAddTodoResponseInProgress>,
-  IResponseInProgressFactory<ILinkTodoResponseInProgress>
+  IResponseInProgressFactory<ILinkTodoResponseInProgress>, 
+  IResponseInProgressFactory<IRegisterUserResponseInProgress>, 
+  IResponseInProgressFactory<ILoginUserResponseInProgress>
 {
-  public IAddTodoResponseInProgress CreateResponseInProgress(HttpResponse response)
+  IAddTodoResponseInProgress IResponseInProgressFactory<IAddTodoResponseInProgress>
+    .CreateResponseInProgress(HttpResponse response)
   {
     return new AddTodoResponseInProgress(response);
   }
 
-  ILinkTodoResponseInProgress IResponseInProgressFactory<ILinkTodoResponseInProgress>.CreateResponseInProgress(HttpResponse response)
+  ILinkTodoResponseInProgress IResponseInProgressFactory<ILinkTodoResponseInProgress>
+    .CreateResponseInProgress(HttpResponse response)
   {
     return new LinkTodoResponseInProgress(response);
+  }
+
+  IRegisterUserResponseInProgress IResponseInProgressFactory<IRegisterUserResponseInProgress>
+    .CreateResponseInProgress(HttpResponse response)
+  {
+    return new RegisterUserResponseInProgress(response);
+  }
+
+  public ILoginUserResponseInProgress CreateResponseInProgress(HttpResponse response)
+  {
+    return new LoginUserResponseInProgress(response);
   }
 }

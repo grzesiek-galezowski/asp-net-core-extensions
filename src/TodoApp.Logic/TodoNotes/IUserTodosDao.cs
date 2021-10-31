@@ -1,11 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using TodoApp.Logic.TodoNotes.AddTodo;
 
-namespace TodoApp.Logic;
+namespace TodoApp.Logic.TodoNotes;
 
 public interface IUserTodosDao
 {
-  Task SaveAsync(TodoCreatedData todoData, CancellationToken cancellationToken);
+  Task SaveAsync(Guid id, CreateTodoRequestData todoData, CancellationToken cancellationToken);
   Task<TodoCreatedData> LoadAsync(Guid id, CancellationToken cancellationToken);
 }

@@ -4,7 +4,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using LiteDB;
-using TodoApp.Logic;
+using TodoApp.Logic.TodoNotes;
+using TodoApp.Logic.TodoNotes.AddTodo;
 
 namespace TodoApp.Db;
 
@@ -17,13 +18,13 @@ public class UserTodosDao : IUserTodosDao
     _stream = stream;
   }
 
-  public async Task SaveAsync(TodoCreatedData todoData, CancellationToken cancellationToken)
+  public async Task SaveAsync(Guid id, CreateTodoRequestData todoData, CancellationToken cancellationToken)
   {
     using var liteDb = new LiteDatabase(_stream);
     liteDb.GetCollection<PersistentTodoDto>().Insert(
       new PersistentTodoDto
       {
-        Id = todoData.Id,
+        Id = id,
         Content = todoData.Content,
         LinkedNotes = new Guid[] { },
         Title = todoData.Title

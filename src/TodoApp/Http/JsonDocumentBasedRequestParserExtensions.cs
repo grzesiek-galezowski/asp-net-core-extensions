@@ -3,8 +3,9 @@ using System.Text.Json;
 using Humanizer;
 using Microsoft.AspNetCore.Http;
 using NullableReferenceTypesExtensions;
-using TodoApp.Logic.AddTodo;
-using TodoApp.Logic.LinkTodos;
+using TodoApp.Logic.TodoNotes.AddTodo;
+using TodoApp.Logic.TodoNotes.LinkTodos;
+using TodoApp.Logic.Users;
 
 namespace TodoApp.Http;
 
@@ -12,12 +13,12 @@ public static class JsonDocumentBasedRequestParserExtensions
 {
   public static string Content(this JsonDocument doc)
   {
-    return BasicNullableExtensions.OrThrow<string>(JsonElement(doc, nameof(CreateTodoRequestData.Content)).GetString());
+    return JsonElement(doc, nameof(CreateTodoRequestData.Content)).GetString().OrThrow();
   }
 
   public static string Title(this JsonDocument doc)
   {
-    return BasicNullableExtensions.OrThrow<string>(JsonElement(doc, nameof(CreateTodoRequestData.Title)).GetString());
+    return JsonElement(doc, nameof(CreateTodoRequestData.Title)).GetString().OrThrow();
   }
 
   public static Guid Id2(this HttpRequest request)
@@ -35,7 +36,7 @@ public static class JsonDocumentBasedRequestParserExtensions
     return request.RouteValues[propertyName.Camelize()].OrThrow().ToString().OrThrow();
   }
 
-  private static JsonElement JsonElement(JsonDocument doc, string propertyName)
+  public static JsonElement JsonElement(this JsonDocument doc, string propertyName)
   {
     var camelizedPropertyName = propertyName.Camelize();
     if (doc.RootElement.TryGetProperty(camelizedPropertyName, out var value))
@@ -46,5 +47,25 @@ public static class JsonDocumentBasedRequestParserExtensions
     {
       throw new Exception($"Missing key [{camelizedPropertyName}] in {doc.ToJsonString()}"); //bug better exception
     }
+  }
+
+  public static string RegisteredUserPassword(this JsonDocument doc)
+  {
+    return doc.JsonElement(nameof(RegisterUserRequestData.Password).Camelize()).GetString().OrThrow();
+  }
+
+  public static string RegisteredUserName(this JsonDocument doc)
+  {
+    return doc.JsonElement(nameof(RegisterUserRequestData.Login).Camelize()).GetString().OrThrow();
+  }
+
+  public static string LoggingInUserPassword(this JsonDocument doc)
+  {
+    return doc.JsonElement(nameof(LoginUserRequestData.Password).Camelize()).GetString().OrThrow();
+  }
+
+  public static string LoggingInUserName(this JsonDocument doc)
+  {
+    return doc.JsonElement(nameof(LoginUserRequestData.Login).Camelize()).GetString().OrThrow();
   }
 }
