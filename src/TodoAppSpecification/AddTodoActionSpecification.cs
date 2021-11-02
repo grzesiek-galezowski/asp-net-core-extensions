@@ -1,8 +1,14 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
+using System.Security.Claims;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Extensions;
+using Microsoft.IdentityModel.Tokens;
 using NUnit.Framework;
 using TddXt.HttpContextMock;
 using TodoApp.Bootstrap;
@@ -26,7 +32,7 @@ public class AddTodoActionSpecification
     
     await serviceLogicRoot.AddTodoEndpoint.HandleAsync(
       context.Request()
-        .WithHeader("Authorization", "Bearer trolololo")
+        .WithHeader("Authorization", $"Bearer {TestTokens.GenerateToken()}")
         .PostJson(dto)
         .RealInstance, 
       context.Response().RealInstance,

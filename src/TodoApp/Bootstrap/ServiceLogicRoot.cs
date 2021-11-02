@@ -20,20 +20,15 @@ public class ServiceLogicRoot : IAsyncDisposable
 
     var appLogicRoot = new AppLogicRoot(
       new UserTodosDao(_tempStream),
-      new IdGenerator(), 
-      new UsersDao(_tempStream));
+      new IdGenerator());
     var endpointsAdapter = new EndpointsAdapter(
       appLogicRoot.TodoCommandFactory,
-      appLogicRoot.TodoCommandFactory,
-      appLogicRoot.UserCommandFactory,
-      appLogicRoot.UserCommandFactory);
+      appLogicRoot.TodoCommandFactory);
     _endpointsAdapter = endpointsAdapter;
   }
 
   public IAsyncEndpoint AddTodoEndpoint => _endpointsAdapter.AddTodoEndpoint;
   public IAsyncEndpoint LinkTodoEndpoint => _endpointsAdapter.LinkTodoEndpoint;
-  public IAsyncEndpoint RegisterUserEndpoint => _endpointsAdapter.RegisterUserEndpoint;
-  public IAsyncEndpoint LoginUserEndpoint => _endpointsAdapter.LoginUserEndpoint;
 
   public ValueTask DisposeAsync()
   {

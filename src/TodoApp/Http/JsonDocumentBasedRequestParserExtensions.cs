@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using NullableReferenceTypesExtensions;
 using TodoApp.Logic.TodoNotes.AddTodo;
 using TodoApp.Logic.TodoNotes.LinkTodos;
-using TodoApp.Logic.Users;
 
 namespace TodoApp.Http;
 
@@ -47,25 +46,5 @@ public static class JsonDocumentBasedRequestParserExtensions
     {
       throw new Exception($"Missing key [{camelizedPropertyName}] in {doc.ToJsonString()}"); //bug better exception
     }
-  }
-
-  public static string RegisteredUserPassword(this JsonDocument doc)
-  {
-    return doc.JsonElement(nameof(RegisterUserRequestData.Password).Camelize()).GetString().OrThrow();
-  }
-
-  public static string RegisteredUserName(this JsonDocument doc)
-  {
-    return doc.JsonElement(nameof(RegisterUserRequestData.Login).Camelize()).GetString().OrThrow();
-  }
-
-  public static string LoggingInUserPassword(this JsonDocument doc)
-  {
-    return doc.JsonElement(nameof(LoginUserRequestData.Password).Camelize()).GetString().OrThrow();
-  }
-
-  public static string LoggingInUserName(this JsonDocument doc)
-  {
-    return doc.JsonElement(nameof(LoginUserRequestData.Login).Camelize()).GetString().OrThrow();
   }
 }

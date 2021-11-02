@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using NullableReferenceTypesExtensions;
 using TodoApp.Logic.TodoNotes.AddTodo;
 using TodoApp.Logic.TodoNotes.LinkTodos;
-using TodoApp.Logic.Users;
 
 namespace TodoApp.Http;
 
@@ -17,9 +16,7 @@ public interface IRequestParser<T>
 
 public class JsonDocumentBasedRequestParser 
   : IRequestParser<CreateTodoRequestData>,
-    IRequestParser<LinkTodosRequestData>, 
-    IRequestParser<RegisterUserRequestData>, 
-    IRequestParser<LoginUserRequestData>
+    IRequestParser<LinkTodosRequestData>
 {
   async Task<CreateTodoRequestData> IRequestParser<CreateTodoRequestData>.
     ParseAsync(HttpRequest request, CancellationToken cancellationToken)
@@ -32,21 +29,5 @@ public class JsonDocumentBasedRequestParser
     CancellationToken cancellationToken)
   {
     return Task.FromResult(new LinkTodosRequestData(request.Id1(), request.Id2()));
-  }
-
-  public async Task<RegisterUserRequestData> ParseAsync(HttpRequest request, CancellationToken cancellationToken)
-  {
-    using var doc = await JsonDocument.ParseAsync(request.Body, cancellationToken: cancellationToken);
-    return new RegisterUserRequestData(
-      doc.RegisteredUserName(), 
-      doc.RegisteredUserPassword());
-  }
-
-  async Task<LoginUserRequestData> IRequestParser<LoginUserRequestData>.ParseAsync(HttpRequest request, CancellationToken cancellationToken)
-  {
-    using var doc = await JsonDocument.ParseAsync(request.Body, cancellationToken: cancellationToken);
-    return new LoginUserRequestData(
-      doc.RegisteredUserName(), 
-      doc.RegisteredUserPassword());
   }
 }
