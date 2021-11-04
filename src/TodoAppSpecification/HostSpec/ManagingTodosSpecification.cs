@@ -99,4 +99,67 @@ public class ManagingTodosSpecification
     response1.StatusCode.Should().Be(401);
     response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
   }
+  
+  [Test]
+  public async Task ShouldNotAllowTokensWithNoBearerToken()
+  {
+    await using var appFactory = new AppFactory();
+    var flurlClient = new FlurlClient(appFactory.CreateClient());
+
+    var response1 = await flurlClient
+      .Request("/todo")
+      .AllowAnyHttpStatus()
+      .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+
+    response1.StatusCode.Should().Be(401);
+    response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
+  }
+
+  [Test]
+  public async Task ShouldNotAllowTokensWithBadlyFormattedBearerToken()
+  {
+    await using var appFactory = new AppFactory();
+    var flurlClient = new FlurlClient(appFactory.CreateClient());
+
+    var response1 = await flurlClient
+      .Request("/todo")
+      .WithHeader("Authorization", "Bearer lol")
+      .AllowAnyHttpStatus()
+      .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+
+    response1.StatusCode.Should().Be(401);
+    response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
+  }
+
+  [Test]
+  public async Task ShouldNotAllowTokensWithNoBearerInAuthorizationHeader()
+  {
+    await using var appFactory = new AppFactory();
+    var flurlClient = new FlurlClient(appFactory.CreateClient());
+
+    var response1 = await flurlClient
+      .Request("/todo")
+      .WithHeader("Authorization", "")
+      .AllowAnyHttpStatus()
+      .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+
+    response1.StatusCode.Should().Be(401);
+    response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
+  }
+
+  [Test]
+  public async Task ShouldNotAllowTokensWithNullAuthorizationHeader()
+  {
+    await using var appFactory = new AppFactory();
+    var flurlClient = new FlurlClient(appFactory.CreateClient());
+
+    var response1 = await flurlClient
+      .Request("/todo")
+      .WithHeader("Authorization", null)
+      .AllowAnyHttpStatus()
+      .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+
+    response1.StatusCode.Should().Be(401);
+    response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
+  }
 }
