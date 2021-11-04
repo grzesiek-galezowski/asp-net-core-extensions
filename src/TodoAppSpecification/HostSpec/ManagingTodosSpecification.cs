@@ -50,23 +50,53 @@ public class ManagingTodosSpecification
       .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
 
     response3.ResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
-
-  }
-}
-
-public interface IX
-{
-  void Lol1();
-  void Lol2();
-}
-
-public class X : IX
-{
-  public virtual void Lol1()
-  {
   }
 
-  public void Lol2()
+  [Test]
+  public async Task ShouldNotAllowExpiredTokensInAddTodoRequest()
   {
+    await using var appFactory = new AppFactory();
+    var flurlClient = new FlurlClient(appFactory.CreateClient());
+
+    var response1 = await flurlClient
+      .Request("/todo")
+      .AllowAnyHttpStatus()
+      .WithHeader("Authorization", "Bearer " + TestTokens.GenerateExpiredToken())
+      .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+
+    response1.StatusCode.Should().Be(401);
+    response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
+  }
+
+  [Test]
+  public async Task ShouldNotAllowTokensWithBadKeyInAddTodoRequest()
+  {
+    await using var appFactory = new AppFactory();
+    var flurlClient = new FlurlClient(appFactory.CreateClient());
+
+    var response1 = await flurlClient
+      .Request("/todo")
+      .AllowAnyHttpStatus()
+      .WithHeader("Authorization", "Bearer " + TestTokens.GenerateTokenWithBadKey())
+      .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+
+    response1.StatusCode.Should().Be(401);
+    response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
+  }
+
+  [Test]
+  public async Task ShouldNotAllowTokensWithBadIssuerInAddTodoRequest()
+  {
+    await using var appFactory = new AppFactory();
+    var flurlClient = new FlurlClient(appFactory.CreateClient());
+
+    var response1 = await flurlClient
+      .Request("/todo")
+      .AllowAnyHttpStatus()
+      .WithHeader("Authorization", "Bearer " + TestTokens.GenerateTokenFromBadIssuer())
+      .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+
+    response1.StatusCode.Should().Be(401);
+    response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
   }
 }

@@ -22,12 +22,12 @@ public static class JsonDocumentBasedRequestParserExtensions
 
   public static Guid Id2(this HttpRequest request)
   {
-    return Guid.Parse((string)RequiredStringFromRoute(request, nameof(LinkTodosRequestData.Id2)));
+    return Guid.Parse(RequiredStringFromRoute(request, nameof(LinkTodosRequestData.Id2)));
   }
 
   public static Guid Id1(this HttpRequest request)
   {
-    return Guid.Parse((string)RequiredStringFromRoute(request, nameof(LinkTodosRequestData.Id1)));
+    return Guid.Parse(RequiredStringFromRoute(request, nameof(LinkTodosRequestData.Id1)));
   }
 
   private static string RequiredStringFromRoute(HttpRequest request, string propertyName)

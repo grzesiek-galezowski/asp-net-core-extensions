@@ -17,7 +17,6 @@ public class ServiceLogicRoot : IAsyncDisposable
   public ServiceLogicRoot()
   {
     _tempStream = new TempStream();
-
     var appLogicRoot = new AppLogicRoot(
       new UserTodosDao(_tempStream),
       new IdGenerator());

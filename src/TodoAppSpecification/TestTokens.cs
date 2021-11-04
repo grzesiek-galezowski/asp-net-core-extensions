@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
@@ -22,19 +23,52 @@ public static class TestTokens
   static TestTokens()
   {
     Rng.GetBytes(Key);
-    SecurityKey = new SymmetricSecurityKey(Key) { KeyId = Guid.NewGuid().ToString() };
-    SigningCredentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);
+    SecurityKey = CreateSymmetricSecurityKey(Key);
+    SigningCredentials = CreateSigningCredentials(SecurityKey);
   }
 
   public static string GenerateToken(params Claim[] claims)
   {
+    return GenerateToken(claims, Issuer, SigningCredentials, DateTime.UtcNow.AddMinutes(20));
+  }
+
+  public static string GenerateTokenWithBadKey(params Claim[] claims)
+  {
+    var signingCredentials = CreateSigningCredentials(
+      CreateSymmetricSecurityKey(
+        Enumerable.Repeat<byte>(1, 32).ToArray()));
+    return GenerateToken(claims, Issuer, signingCredentials, DateTime.UtcNow.AddMinutes(20));
+  }
+
+  public static string GenerateTokenFromBadIssuer(params Claim[] claims)
+  {
+    return GenerateToken(claims, Issuer + "a", SigningCredentials, DateTime.UtcNow.AddMinutes(20));
+  }
+
+  public static string GenerateExpiredToken(params Claim[] claims)
+  {
+    return GenerateToken(claims, Issuer, SigningCredentials, DateTime.UtcNow.AddMinutes(-20));
+  }
+
+  private static string GenerateToken(Claim[] claims, string issuer, SigningCredentials signingCredentials, DateTime expiryTime)
+  {
     return TokenHandler.WriteToken(
       new JwtSecurityToken(
-        Issuer,
+        issuer,
         null,
         claims,
         null,
-        DateTime.UtcNow.AddMinutes(20),
-        SigningCredentials));
+        expiryTime,
+        signingCredentials));
+  }
+
+  private static SigningCredentials CreateSigningCredentials(SecurityKey securityKey)
+  {
+    return new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+  }
+
+  private static SymmetricSecurityKey CreateSymmetricSecurityKey(byte[] key)
+  {
+    return new SymmetricSecurityKey(key) { KeyId = Guid.NewGuid().ToString() };
   }
 }
