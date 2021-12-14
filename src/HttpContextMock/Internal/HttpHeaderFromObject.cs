@@ -1,26 +1,25 @@
 using System.Reflection;
 
-namespace TddXt.HttpContextMock.Internal
+namespace TddXt.HttpContextMock.Internal;
+
+internal class HttpHeaderFromObject
 {
-  internal class HttpHeaderFromObject
+  private readonly PropertyInfo _value;
+  private readonly object _properties;
+
+  public HttpHeaderFromObject(PropertyInfo pi, object properties)
   {
-    private readonly PropertyInfo _value;
-    private readonly object _properties;
+    _value = pi;
+    _properties = properties;
+  }
 
-    public HttpHeaderFromObject(PropertyInfo pi, object properties)
-    {
-      _value = pi;
-      _properties = properties;
-    }
+  public string Name()
+  {
+    return _value.Name.Replace("_", "-");
+  }
 
-    public string Name()
-    {
-      return _value.Name.Replace("_", "-");
-    }
-
-    public string Value()
-    {
-      return _value.GetValue(_properties).ToString();
-    }
+  public string? Value()
+  {
+    return _value.GetValue(_properties)?.ToString();
   }
 }

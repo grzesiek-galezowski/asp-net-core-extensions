@@ -1,10 +1,9 @@
-namespace TddXt.HttpContextMock
+namespace TddXt.HttpContextMock;
+
+public static class HttpResponseMockAssertionsExtensions
 {
-  public static class HttpResponseMockAssertionsExtensions
+  public static HttpResponseMockAssertions Should(this HttpResponseMock response)
   {
-    public static HttpResponseMockAssertions Should(this HttpResponseMock response)
-    {
-      return new HttpResponseMockAssertions(response);
-    }
+    return new HttpResponseMockAssertions(response);
   }
 }
