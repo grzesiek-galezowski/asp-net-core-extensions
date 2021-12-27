@@ -1,0 +1,10 @@
+﻿global using System;
+global using TddXt.AnyRoot.Strings;
+global using TddXt.AnyRoot.Numbers;
+global using TddXt.AnyRoot.Collections;
+global using TddXt.AnyRoot.Time;
+global using NUnit.Framework;
+global using static TddXt.AnyRoot.Root;
+global using System.Linq;
+global using System.Threading.Tasks;
+global using FluentAssertions;

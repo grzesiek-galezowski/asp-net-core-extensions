@@ -1,11 +1,5 @@
-﻿using System;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using System.Net;
 using Flurl.Http;
-using Microsoft.IdentityModel.Tokens;
-using NUnit.Framework;
 
 namespace TodoAppSpecification.HostSpec;
 
@@ -19,9 +13,11 @@ public class ManagingTodosSpecification
 
     var response = await flurlClient
       .Request("/todo")
-      .WithHeader("Authorization", "Bearer trolololo")
+      .WithHeader("Authorization", "Bearer " + TestTokens.GenerateToken())
       .AllowAnyHttpStatus()
       .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+
+    response.StatusCode.Should().Be(200);
   }
 
   [Test]

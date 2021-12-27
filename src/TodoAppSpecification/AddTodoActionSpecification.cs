@@ -1,18 +1,9 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net;
-using System.Security.Claims;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using FluentAssertions;
-using FluentAssertions.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using NUnit.Framework;
 using TddXt.HttpContextMock;
 using TodoApp.Bootstrap;
-using TodoApp.Logic;
 
 namespace TodoAppSpecification;
 
@@ -22,7 +13,11 @@ public class AddTodoActionSpecification
   public async Task ShouldRespondToPostTodoWithTodoCreated()
   {
     //GIVEN
-    await using var serviceLogicRoot = new ServiceLogicRoot();
+    await using var serviceLogicRoot = new ServiceLogicRoot(new TokenValidationParameters
+    {
+      ValidIssuer = TestTokens.Issuer,
+      IssuerSigningKey = TestTokens.SecurityKey
+    }, Any.Instance<ILoggerFactory>());
     var context = HttpContextMock.Default();
     var dto = new 
     {

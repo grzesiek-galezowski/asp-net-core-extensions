@@ -1,9 +1,7 @@
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Humanizer;
 using Microsoft.AspNetCore.Http;
-using NullableReferenceTypesExtensions;
 using TodoApp.Logic.TodoNotes.AddTodo;
 using TodoApp.Logic.TodoNotes.LinkTodos;
 

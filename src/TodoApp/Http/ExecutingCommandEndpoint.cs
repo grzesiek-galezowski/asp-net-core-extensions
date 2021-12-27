@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using TodoApp.Logic;
 using TodoApp.Logic.TodoNotes;
 
 namespace TodoApp.Http;
