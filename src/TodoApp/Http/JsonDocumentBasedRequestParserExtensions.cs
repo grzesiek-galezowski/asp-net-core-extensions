@@ -19,26 +19,20 @@ public static class JsonDocumentBasedRequestParserExtensions
     return Guid.Parse(RequiredStringFromRoute(request, nameof(LinkTodosRequestData.Id1)));
   }
 
-  private static string RequiredStringFromRoute(HttpRequest request, string propertyName)
+  public static string RequiredStringFromRoute(HttpRequest request, string propertyName)
   {
     return request.RouteValues[propertyName.Camelize()].OrThrow().ToString().OrThrow();
   }
 
-  public static JsonElement JsonElement(this JsonDocument doc, string propertyName)
-  {
-    return JsonProperty(doc.RootElement, propertyName);
-  }
-
   public static JsonElement JsonProperty(this JsonElement element, string propertyName)
   {
-    var camelizedPropertyName = propertyName.Camelize();
-    if (element.TryGetProperty(camelizedPropertyName, out var value))
+    if (element.TryGetProperty(propertyName, out var value))
     {
       return value.OrThrow();
     }
     else
     {
-      throw new Exception($"Missing key [{camelizedPropertyName}] in {element.GetRawText()}"); //bug better exception
+      throw new Exception($"Missing key [{propertyName}] in {element.GetRawText()}"); //bug better exception
     }
   }
 }

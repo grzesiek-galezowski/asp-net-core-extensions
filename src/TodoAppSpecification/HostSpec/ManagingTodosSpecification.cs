@@ -1,5 +1,7 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using Flurl.Http;
+using TodoApp.Http;
 
 namespace TodoAppSpecification.HostSpec;
 
@@ -15,7 +17,9 @@ public class ManagingTodosSpecification
       .Request("/todo")
       .WithHeader("Authorization", "Bearer " + TestTokens.GenerateToken())
       .AllowAnyHttpStatus()
-      .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+      .PostJsonAsync(new AddTodoDto(
+        new AddTodoDataDto("Meeting", "there's a meeting you need to attend"),
+        new Dictionary<string, string>()));
 
     response.StatusCode.Should().Be(200);
   }
@@ -29,12 +33,16 @@ public class ManagingTodosSpecification
     var response1 = await flurlClient
       .Request("/todo")
       .WithHeader("Authorization", "Bearer " + TestTokens.GenerateToken())
-      .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+      .PostJsonAsync(new AddTodoDto(
+        new AddTodoDataDto("Meeting", "there's a meeting you need to attend"),
+        new Dictionary<string, string>()));
 
     var response2 = await flurlClient
       .Request("/todo")
       .WithHeader("Authorization", $"Bearer {TestTokens.GenerateToken()}")
-      .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
+      .PostJsonAsync(new AddTodoDto(
+        new AddTodoDataDto("Meeting", "there's a meeting you need to attend"),
+        new Dictionary<string, string>()));
 
     var id1 = await response1.GetJsonAsync<Guid>();
     var id2 = await response2.GetJsonAsync<Guid>();

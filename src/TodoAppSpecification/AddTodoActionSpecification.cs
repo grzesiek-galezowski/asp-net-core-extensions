@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using TddXt.HttpContextMock;
 using TodoApp.Bootstrap;
+using TodoApp.Http;
 
 namespace TodoAppSpecification;
 
@@ -20,16 +21,9 @@ public class AddTodoActionSpecification
       IssuerSigningKey = TestTokens.SecurityKey
     }, Any.Instance<ILoggerFactory>());
     var context = HttpContextMock.Default();
-    var dto = new 
-    {
-      data = new {
-        title = "a",
-        content = "b"
-      },
-      links = new Dictionary<string, string>() //TODO no duplicates allowed
+    var dto = new AddTodoDto(new AddTodoDataDto("a", "b"), new Dictionary<string, string>());
       //bug add files - transcription will be added to the saved note
       //bug the content will be truncated when it reaches 200 chars
-    };
     
     await serviceLogicRoot.AddTodoEndpoint.HandleAsync(
       context.Request()
