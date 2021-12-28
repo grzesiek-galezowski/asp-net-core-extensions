@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Microsoft.Extensions.Logging;
@@ -21,8 +22,13 @@ public class AddTodoActionSpecification
     var context = HttpContextMock.Default();
     var dto = new 
     {
-      title = "a",
-      content = "b"
+      data = new {
+        title = "a",
+        content = "b"
+      },
+      links = new Dictionary<string, string>() //TODO no duplicates allowed
+      //bug add files - transcription will be added to the saved note
+      //bug the content will be truncated when it reaches 200 chars
     };
     
     await serviceLogicRoot.AddTodoEndpoint.HandleAsync(
