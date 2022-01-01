@@ -3,17 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using TodoApp.Logic.TodoNotes.AddTodo;
-using TodoApp.Logic.TodoNotes.LinkTodos;
 
 namespace TodoApp.Http;
 
-public class JsonDocumentBasedRequestParser 
-  : IRequestParser<CreateTodoRequestData>,
-    IRequestParser<LinkTodosRequestData>
+public class AddTodoRequestDataParser : IRequestParser<CreateTodoRequestData>
 {
   private readonly AddTodoDtoParser _addTodoDtoParser;
 
-  public JsonDocumentBasedRequestParser()
+  public AddTodoRequestDataParser()
   {
     _addTodoDtoParser = new AddTodoDtoParser(
       new AddTodoDataParser(
@@ -31,11 +28,5 @@ public class JsonDocumentBasedRequestParser
 
     var ((title, content), _) = _addTodoDtoParser.Parse(doc);
     return new CreateTodoRequestData(title, content);
-  }
-
-  async Task<LinkTodosRequestData> IRequestParser<LinkTodosRequestData>.ParseAsync(HttpRequest request,
-    CancellationToken cancellationToken)
-  {
-    return await Task.FromResult(new LinkTodosRequestData(request.Id1(), request.Id2()));
   }
 }

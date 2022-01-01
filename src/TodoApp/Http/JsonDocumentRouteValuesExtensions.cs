@@ -7,7 +7,7 @@ using TodoApp.Logic.TodoNotes.LinkTodos;
 
 namespace TodoApp.Http;
 
-public static class JsonDocumentBasedRequestParserExtensions
+public static class JsonDocumentRouteValuesExtensions
 {
   public static Guid Id2(this HttpRequest request)
   {

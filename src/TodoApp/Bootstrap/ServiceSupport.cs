@@ -13,13 +13,28 @@ public class ServiceSupport : IEndpointsSupport
     _loggerFactory = loggerFactory;
   }
 
+  //bug obsolete?
   public IDisposable BeginScope(object source, string operationName)
   {
-    var scope = _loggerFactory.CreateLogger(source.GetType())
-      .BeginScope(new Dictionary<string, object>() //bug add serilog or nlog config
-      {
-        ["operationName"] = operationName
-      });
-    return scope;
+    var dictionary = new Dictionary<string, object>() //bug add serilog or nlog config
+    {
+      ["operationName"] = operationName
+    };
+    return BeginScope(source, dictionary);
+  }
+
+  public IDisposable BeginScope(object source, Dictionary<string, object> properties)
+  {
+    return LoggerFor(source).BeginScope(properties);
+  }
+
+  public void BadRequest(object source, Exception exception)
+  {
+    LoggerFor(source).LogError(exception, "Request is invalid");
+  }
+
+  private ILogger LoggerFor(object source)
+  {
+    return _loggerFactory.CreateLogger(source.GetType());
   }
 }

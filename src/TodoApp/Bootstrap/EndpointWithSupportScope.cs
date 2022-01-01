@@ -1,0 +1,61 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using TodoApp.Http;
+
+namespace TodoApp.Bootstrap;
+
+public interface ILoggedPropertySet
+{
+  Dictionary<string, object> ToDictionaryUsing(HttpRequest httpRequest);
+}
+
+public class InitialScopePropertySet : ILoggedPropertySet
+{
+  private readonly string _operationName;
+
+  public InitialScopePropertySet(string operationName)
+  {
+    _operationName = operationName;
+  }
+
+  public Dictionary<string, object> ToDictionaryUsing(HttpRequest httpRequest)
+  {
+    return new Dictionary<string, object>
+    {
+      ["operationName"] = _operationName,
+      ["requestId"] = httpRequest.HttpContext.TraceIdentifier
+    };
+  }
+}
+
+public class EndpointWithSupportScope : IAsyncEndpoint
+{
+  private readonly IAsyncEndpoint _next;
+  private readonly IEndpointsSupport _support;
+  private readonly ILoggedPropertySet _loggedPropertySet;
+
+  public EndpointWithSupportScope(
+    ILoggedPropertySet loggedPropertySet,
+    IEndpointsSupport serviceSupport, 
+    IAsyncEndpoint next)
+  {
+    _next = next;
+    _support = serviceSupport;
+    _loggedPropertySet = loggedPropertySet;
+  }
+
+  public async Task HandleAsync(
+    HttpRequest request,
+    HttpResponse response,
+    CancellationToken cancellationToken)
+  {
+    //bug add httpcontext.traceidentifier (but ONLY if it's not implicitly added)
+    using (_support.BeginScope(this, _loggedPropertySet.ToDictionaryUsing(request))) //bug request id, correlationId - maybe through open telemetry?
+    {
+      await _next.HandleAsync(request, response, cancellationToken);
+      //bug in-memory logger (e.g. Logging.Memory nuget)n
+    }
+  }
+}

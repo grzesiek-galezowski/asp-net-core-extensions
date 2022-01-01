@@ -1,10 +1,9 @@
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using Sprache;
+using Microsoft.Net.Http.Headers;
 using TodoApp.Http;
 using TodoApp.Logic.TodoNotes;
 using TodoApp.Logic.TodoNotes.AddTodo;
@@ -21,85 +20,60 @@ public class EndpointsAdapter
     IEndpointsSupport support)
   {
     //bug exception handling endpoint
+    //bug endpoint logging a generated request id
     LinkTodoEndpoint =
-      new LogScopedEndpoint("Link TODO items",
-        new AuthorizationEndpoint(tokenValidationParameters,
-          new ExecutingCommandEndpoint<LinkTodosRequestData, ILinkTodoResponseInProgress>(
-            new JsonDocumentBasedRequestParser(),
-            linkTodoCommandFactory,
-            new ResponseInProgressFactory())), support);
+      new EndpointWithSupportScope(
+        new InitialScopePropertySet("Link TODO items"),
+        support,
+        new HttpRequestCompletenessValidatingEndpoint(
+          AggregateCondition.ConsistingOf(
+            Conditions.HeaderAsExpected(HeaderNames.Accept, MediaTypeNames.Application.Json),
+            Conditions.HeaderAsExpected(HeaderNames.ContentType, MediaTypeNames.Application.Json),
+            Conditions.HeaderDefined(HeaderNames.Authorization),
+            Conditions.QueryParamDefined("customerId")), //bug extract to constants
+          support,
+          new EndpointWithSupportScope(
+            new FromRequestScopePropertySet(
+              ScopeProperty.FromQuery("customerId")), //bug duplication
+            support,
+            new AuthorizationEndpoint(
+              tokenValidationParameters,
+              new ExecutingCommandEndpoint<LinkTodosRequestData, ILinkTodoResponseInProgress>(
+                new LinkTodosRequestDataParser(),
+                linkTodoCommandFactory,
+                new ResponseInProgressFactory())))));
 
     //bug exception handling endpoint
+    //bug endpoint logging a generated request id
+    //bug request validation endpoint
+    //bug EndpointWithSupportScope should allow custom "value provider"
     AddTodoEndpoint =
-      new LogScopedEndpoint("Add todo item",
-        new AuthorizationEndpoint(tokenValidationParameters,
+      new EndpointWithSupportScope(new InitialScopePropertySet("Add a TODO item"),
+        support,
+        new AuthorizationEndpoint(
+          tokenValidationParameters,
           new ExecutingCommandEndpoint<CreateTodoRequestData, IAddTodoResponseInProgress>(
-            new JsonDocumentBasedRequestParser(),
+            new AddTodoRequestDataParser(),
             addTodoCommandFactory,
-            new ResponseInProgressFactory())), support);
+            new ResponseInProgressFactory())));
   }
 
   public IAsyncEndpoint LinkTodoEndpoint { get; }
   public IAsyncEndpoint AddTodoEndpoint { get; }
 }
 
-public class AuthorizationEndpoint : IAsyncEndpoint
+public class FromRequestScopePropertySet : ILoggedPropertySet
 {
-  private readonly TokenValidationParameters _tokenValidationParameters;
-  private readonly IAsyncEndpoint _next;
+  private readonly IScopeProperty[] _scopeProperties;
 
-  public AuthorizationEndpoint(TokenValidationParameters tokenValidationParameters, IAsyncEndpoint next)
+  public FromRequestScopePropertySet(params IScopeProperty[] scopeProperties)
   {
-    _tokenValidationParameters = tokenValidationParameters;
-    _next = next;
+    _scopeProperties = scopeProperties;
   }
 
-  public async Task HandleAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
+  public Dictionary<string, object> ToDictionaryUsing(HttpRequest httpRequest)
   {
-    var invokeNext = false;
-    try
-    {
-      var tokenHandler = new JwtSecurityTokenHandler();
-      string authorizationContent = request.Headers["Authorization"];
-      Parser<string> parser = Parse.String("Bearer ").Then(_ =>
-        from rest in Parse.AnyChar.Many().Text().Token()
-        select rest);
-      var token = parser.Parse(authorizationContent);
-
-      if (tokenHandler.CanReadToken(token))
-      {
-        var claimsPrincipal = tokenHandler.ValidateToken(
-          token, 
-          new TokenValidationParameters()
-          {
-            ValidIssuer = _tokenValidationParameters.ValidIssuer,
-            IssuerSigningKey = _tokenValidationParameters.IssuerSigningKey,
-            RequireAudience = false,
-            ValidateActor = false,
-            ValidateAudience = false,
-            ValidateTokenReplay = false,
-            //AuthenticationType = 
-          }, out var securityToken);
-
-        if (securityToken != null)
-        {
-          invokeNext = true;
-        }
-      }
-    }
-    catch (Exception e)
-    {
-      Console.WriteLine(e);
-      //bug
-    }
-
-    if (invokeNext)
-    {
-      await _next.HandleAsync(request, response, cancellationToken);
-    }
-    else
-    {
-      await Results.Unauthorized().ExecuteAsync(request.HttpContext);
-    }
+    return _scopeProperties.Select(p => p.ValueFrom(httpRequest))
+      .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
   }
 }

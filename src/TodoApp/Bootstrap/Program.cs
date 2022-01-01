@@ -29,6 +29,9 @@ app.MapPost("/todo/{id1}/link/{id2}",
 app.Run();
 
 
-public partial class Program
+namespace TodoApp.Bootstrap
 {
+  public partial class Program
+  {
+  }
 }
