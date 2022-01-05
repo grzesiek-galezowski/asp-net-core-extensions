@@ -3,7 +3,8 @@ using System.Text.Json;
 
 namespace TodoApp.Http;
 
-internal class DictionaryParser
+internal class DictionaryParser<TKey, TValue> : 
+  IJsonElementParser<Dictionary<TKey, TValue>> where TKey : notnull
 {
   private readonly string _propertyName;
 
@@ -12,8 +13,8 @@ internal class DictionaryParser
     _propertyName = propertyName;
   }
 
-  public Dictionary<string, string> Parse(JsonElement jsonElement)
+  public Dictionary<TKey, TValue> Parse(JsonElement jsonElement)
   {
-    return jsonElement.JsonProperty(_propertyName).Deserialize<Dictionary<string, string>>().OrThrow();
+    return jsonElement.JsonProperty(_propertyName).Deserialize<Dictionary<TKey, TValue>>().OrThrow();
   }
 }

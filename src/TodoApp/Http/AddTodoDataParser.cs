@@ -2,12 +2,14 @@ using System.Text.Json;
 
 namespace TodoApp.Http;
 
-internal class AddTodoDataParser
+internal class AddTodoDataParser : IJsonElementParser<AddTodoDataDto>
 {
-  private readonly RequiredStringParser _titleParser;
-  private readonly RequiredStringParser _contentParser;
+  private readonly IJsonElementParser<string> _titleParser;
+  private readonly IJsonElementParser<string> _contentParser;
 
-  public AddTodoDataParser(RequiredStringParser titleParser, RequiredStringParser contentParser)
+  public AddTodoDataParser(
+    IJsonElementParser<string> titleParser, 
+    IJsonElementParser<string> contentParser)
   {
     _titleParser = titleParser;
     _contentParser = contentParser;

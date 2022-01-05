@@ -58,7 +58,14 @@ public class EndpointsAdapter
         new AuthorizationEndpoint(
           tokenValidationParameters,
           new ExecutingCommandEndpoint<CreateTodoRequestData, IAddTodoResponseInProgress>(
-            new AddTodoRequestDataParser(),
+            new AddTodoRequestDataParser(
+              new AddTodoDtoParser(
+                new AddTodoDataParser(
+                  new RequiredStringParser(nameof(AddTodoDataDto.Title)),
+                  new RequiredStringParser(nameof(AddTodoDataDto.Content))
+                ),
+                new DictionaryParser<string, string>(nameof(AddTodoDto.Links))
+              )),
             addTodoCommandFactory,
             new ResponseInProgressFactory())));
   }

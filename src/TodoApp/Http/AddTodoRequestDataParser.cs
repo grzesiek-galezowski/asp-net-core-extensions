@@ -8,25 +8,20 @@ namespace TodoApp.Http;
 
 public class AddTodoRequestDataParser : IRequestParser<CreateTodoRequestData>
 {
-  private readonly AddTodoDtoParser _addTodoDtoParser;
+  private readonly IJsonElementParser<AddTodoDto> _addTodoDtoParser;
 
-  public AddTodoRequestDataParser()
+  public AddTodoRequestDataParser(IJsonElementParser<AddTodoDto> addTodoDtoParser)
   {
-    _addTodoDtoParser = new AddTodoDtoParser(
-      new AddTodoDataParser(
-        new RequiredStringParser(nameof(AddTodoDataDto.Title)),
-        new RequiredStringParser(nameof(AddTodoDataDto.Content))
-      ),
-      new DictionaryParser(nameof(AddTodoDto.Links))
-    );
+    _addTodoDtoParser = addTodoDtoParser;
   }
 
-  async Task<CreateTodoRequestData> IRequestParser<CreateTodoRequestData>.
-    ParseAsync(HttpRequest request, CancellationToken cancellationToken)
+  //bug get back to this parser when second request with body is added
+  // and make it more generic, e.g. body parser or sth.
+  public async Task<CreateTodoRequestData> ParseAsync(HttpRequest request, CancellationToken cancellationToken)
   {
     using var doc = await JsonDocument.ParseAsync(request.Body, cancellationToken: cancellationToken);
 
-    var ((title, content), _) = _addTodoDtoParser.Parse(doc);
+    var ((title, content), _) = _addTodoDtoParser.Parse(doc.RootElement);
     return new CreateTodoRequestData(title, content);
   }
 }

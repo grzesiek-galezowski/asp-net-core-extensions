@@ -1,23 +1,26 @@
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace TodoApp.Http;
 
-internal class AddTodoDtoParser
+public class AddTodoDtoParser : IJsonElementParser<AddTodoDto>
 {
-  private readonly AddTodoDataParser _addTodoDataParser;
-  private readonly DictionaryParser _linksParser;
+  private readonly IJsonElementParser<AddTodoDataDto> _addTodoDataParser;
+  private readonly IJsonElementParser<Dictionary<string, string>> _linksParser;
 
-  public AddTodoDtoParser(AddTodoDataParser addTodoDataParser, DictionaryParser linksParser)
+  public AddTodoDtoParser(
+    IJsonElementParser<AddTodoDataDto> addTodoDataParser, 
+    IJsonElementParser<Dictionary<string, string>> linksParser)
   {
     _addTodoDataParser = addTodoDataParser;
     _linksParser = linksParser;
   }
 
-  public AddTodoDto Parse(JsonDocument doc)
+  public AddTodoDto Parse(JsonElement jsonElement)
   {
     return new AddTodoDto(
-      _addTodoDataParser.Parse(doc.RootElement),
-      _linksParser.Parse(doc.RootElement)
+      _addTodoDataParser.Parse(jsonElement),
+      _linksParser.Parse(jsonElement)
     );
   }
 }

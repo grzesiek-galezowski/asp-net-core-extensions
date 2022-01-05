@@ -2,7 +2,7 @@ using System.Text.Json;
 
 namespace TodoApp.Http;
 
-internal class RequiredStringParser
+internal class RequiredStringParser : IJsonElementParser<string>
 {
   private readonly string _propertyName;
 
