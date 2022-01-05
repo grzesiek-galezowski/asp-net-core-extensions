@@ -2,7 +2,6 @@ using System;
 using System.Text.Json;
 using Humanizer;
 using Microsoft.AspNetCore.Http;
-using NullableReferenceTypesExtensions;
 using TodoApp.Logic.TodoNotes.LinkTodos;
 
 namespace TodoApp.Http;

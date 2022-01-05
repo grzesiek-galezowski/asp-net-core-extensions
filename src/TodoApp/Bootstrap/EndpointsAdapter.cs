@@ -8,6 +8,7 @@ using TodoApp.Http;
 using TodoApp.Logic.TodoNotes;
 using TodoApp.Logic.TodoNotes.AddTodo;
 using TodoApp.Logic.TodoNotes.LinkTodos;
+using static TodoApp.Bootstrap.HttpRequestParameterNames;
 
 namespace TodoApp.Bootstrap;
 
@@ -29,12 +30,16 @@ public class EndpointsAdapter
           AggregateCondition.ConsistingOf(
             Conditions.HeaderAsExpected(HeaderNames.Accept, MediaTypeNames.Application.Json),
             Conditions.HeaderAsExpected(HeaderNames.ContentType, MediaTypeNames.Application.Json),
+            Conditions.RouteContainsGuidNamed(Id1),
+            Conditions.RouteContainsGuidNamed(Id2),
             Conditions.HeaderDefined(HeaderNames.Authorization),
-            Conditions.QueryParamDefined("customerId")), //bug extract to constants
+            Conditions.QueryParamDefined(CustomerId)),
           support,
           new EndpointWithSupportScope(
             new FromRequestScopePropertySet(
-              ScopeProperty.FromQuery("customerId")), //bug duplication
+              ScopeProperty.FromQuery(CustomerId),
+              ScopeProperty.FromRoute(Id1),
+              ScopeProperty.FromRoute(Id2)),
             support,
             new AuthorizationEndpoint(
               tokenValidationParameters,

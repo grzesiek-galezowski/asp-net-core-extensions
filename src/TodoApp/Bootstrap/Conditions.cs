@@ -20,4 +20,9 @@ static internal class Conditions
   {
     return new QueryParamNotNullOrWhitespaceCondition(paramName);
   }
+
+  public static IHttpRequestCondition RouteContainsGuidNamed(string name)
+  {
+    return new RouteParamIsAValidGuid(name);
+  }
 }

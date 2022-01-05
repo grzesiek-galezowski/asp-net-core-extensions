@@ -29,4 +29,11 @@ public class ScopeProperty : IScopeProperty
   {
     return KeyValuePair.Create(_paramName, _extractValue(httpRequest));
   }
+
+  public static IScopeProperty FromRoute(string routeElementName)
+  {
+    return new ScopeProperty(
+      routeElementName, 
+      request => request.RouteValues[routeElementName].OrThrow());
+  }
 }

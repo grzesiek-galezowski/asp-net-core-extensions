@@ -52,11 +52,11 @@ public class HttpRequestCompletenessValidatingEndpoint : IAsyncEndpoint
       _httpRequestCondition.Assert(request);
       await _next.HandleAsync(request, response, cancellationToken);
     }
-    catch (Exception e) //bug make all exceptions inherit some sort of validation exception
+    catch (HttpRequestInvalidException e) //bug make all exceptions inherit some sort of validation exception
     //bug make catch exception a fallback for unknown exceptions
     {
       _support.BadRequest(this, e);
-      await Results.BadRequest(e /* bug do not include the exception here! */).ExecuteAsync(request.HttpContext);
+      await Results.BadRequest(e.ToString() /* bug do not include the exception here! */).ExecuteAsync(request.HttpContext);
     }
   }
 }
