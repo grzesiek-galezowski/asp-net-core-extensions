@@ -21,39 +21,44 @@ public class EndpointsAdapter
     IEndpointsSupport support)
   {
     //bug exception handling endpoint
-    //bug endpoint logging a generated request id
     LinkTodoEndpoint =
-      new EndpointWithSupportScope(
-        new InitialScopePropertySet("Link TODO items"),
+      new EndpointWithFallbackExceptionHandling(
         support,
-        new HttpRequestCompletenessValidatingEndpoint(
-          AggregateCondition.ConsistingOf(
-            Conditions.HeaderAsExpected(HeaderNames.Accept, MediaTypeNames.Application.Json),
-            Conditions.HeaderAsExpected(HeaderNames.ContentType, MediaTypeNames.Application.Json),
-            Conditions.RouteContainsGuidNamed(Id1),
-            Conditions.RouteContainsGuidNamed(Id2),
-            Conditions.HeaderDefined(HeaderNames.Authorization),
-            Conditions.QueryParamDefined(CustomerId)),
-          support,
+        new EndpointWithRequestIdAsTraceId(
           new EndpointWithSupportScope(
             new FromRequestScopePropertySet(
-              ScopeProperty.FromQuery(CustomerId),
-              ScopeProperty.FromRoute(Id1),
-              ScopeProperty.FromRoute(Id2)),
+              ScopeProperty.FromConstant("operationName", "Link TODO items"),
+              ScopeProperty.TraceIdentifierAs("requestId")),
             support,
-            new AuthorizationEndpoint(
-              tokenValidationParameters,
-              new ExecutingCommandEndpoint<LinkTodosRequestData, ILinkTodoResponseInProgress>(
-                new LinkTodosRequestDataParser(),
-                linkTodoCommandFactory,
-                new ResponseInProgressFactory())))));
+            new HttpRequestCompletenessValidatingEndpoint(
+              AggregateCondition.ConsistingOf(
+                Conditions.HeaderAsExpected(HeaderNames.Accept, MediaTypeNames.Application.Json),
+                Conditions.HeaderAsExpected(HeaderNames.ContentType, MediaTypeNames.Application.Json),
+                Conditions.RouteContainsGuidNamed(Id1),
+                Conditions.RouteContainsGuidNamed(Id2),
+                Conditions.HeaderDefined(HeaderNames.Authorization),
+                Conditions.QueryParamDefined(CustomerId)),
+              support,
+              new EndpointWithSupportScope(
+                new FromRequestScopePropertySet(
+                  ScopeProperty.FromQuery(CustomerId),
+                  ScopeProperty.FromRoute(Id1),
+                  ScopeProperty.FromRoute(Id2)),
+                support,
+                new AuthorizationEndpoint(
+                  tokenValidationParameters,
+                  new ExecutingCommandEndpoint<LinkTodosRequestData, ILinkTodoResponseInProgress>(
+                    new LinkTodosRequestDataParser(),
+                    linkTodoCommandFactory,
+                    new ResponseInProgressFactory())))))));
 
     //bug exception handling endpoint
     //bug endpoint logging a generated request id
     //bug request validation endpoint
     //bug EndpointWithSupportScope should allow custom "value provider"
     AddTodoEndpoint =
-      new EndpointWithSupportScope(new InitialScopePropertySet("Add a TODO item"),
+      new EndpointWithSupportScope(
+        new InitialScopePropertySet("Add a TODO item"), //bug remove this class
         support,
         new AuthorizationEndpoint(
           tokenValidationParameters,

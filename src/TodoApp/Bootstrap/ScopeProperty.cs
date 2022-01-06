@@ -36,4 +36,14 @@ public class ScopeProperty : IScopeProperty
       routeElementName, 
       request => request.RouteValues[routeElementName].OrThrow());
   }
+
+  public static IScopeProperty FromConstant(string propertyName, string propertyValue)
+  {
+    return new ScopeProperty(propertyName, _ => propertyValue);
+  }
+
+  public static IScopeProperty TraceIdentifierAs(string propertyName)
+  {
+    return new ScopeProperty(propertyName, request => request.HttpContext.TraceIdentifier);
+  }
 }

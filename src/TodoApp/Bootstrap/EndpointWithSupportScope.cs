@@ -1,34 +1,9 @@
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using TodoApp.Http;
 
 namespace TodoApp.Bootstrap;
-
-public interface ILoggedPropertySet
-{
-  Dictionary<string, object> ToDictionaryUsing(HttpRequest httpRequest);
-}
-
-public class InitialScopePropertySet : ILoggedPropertySet
-{
-  private readonly string _operationName;
-
-  public InitialScopePropertySet(string operationName)
-  {
-    _operationName = operationName;
-  }
-
-  public Dictionary<string, object> ToDictionaryUsing(HttpRequest httpRequest)
-  {
-    return new Dictionary<string, object>
-    {
-      ["operationName"] = _operationName,
-      ["requestId"] = httpRequest.HttpContext.TraceIdentifier
-    };
-  }
-}
 
 public class EndpointWithSupportScope : IAsyncEndpoint
 {
@@ -51,7 +26,6 @@ public class EndpointWithSupportScope : IAsyncEndpoint
     HttpResponse response,
     CancellationToken cancellationToken)
   {
-    //bug add httpcontext.traceidentifier (but ONLY if it's not implicitly added)
     using (_support.BeginScope(this, _loggedPropertySet.ToDictionaryUsing(request))) //bug request id, correlationId - maybe through open telemetry?
     {
       await _next.HandleAsync(request, response, cancellationToken);
