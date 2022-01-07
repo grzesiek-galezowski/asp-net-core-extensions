@@ -26,7 +26,7 @@ public class EndpointWithSupportScope : IAsyncEndpoint
     HttpResponse response,
     CancellationToken cancellationToken)
   {
-    using (_support.BeginScope(this, _loggedPropertySet.ToDictionaryUsing(request))) //bug request id, correlationId - maybe through open telemetry?
+    using (_support.BeginScope(this, _loggedPropertySet.ToDictionaryUsing(request))) //bug also: telemetry
     {
       await _next.HandleAsync(request, response, cancellationToken);
       //bug in-memory logger (e.g. Logging.Memory nuget)n

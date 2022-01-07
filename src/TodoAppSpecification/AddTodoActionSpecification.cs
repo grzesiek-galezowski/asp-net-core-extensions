@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Mime;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -24,10 +25,14 @@ public class AddTodoActionSpecification
     var dto = new AddTodoDto(new AddTodoDataDto("a", "b"), new Dictionary<string, string>());
       //bug add files - transcription will be added to the saved note
       //bug the content will be truncated when it reaches 200 chars
+      //bug and the truncated note will be appended to the response?
     
     await serviceLogicRoot.AddTodoEndpoint.HandleAsync(
       context.Request()
         .WithHeader("Authorization", $"Bearer {TestTokens.GenerateToken()}")
+        .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+        .WithHeader("Accept", MediaTypeNames.Application.Json)
+        .WithQueryParam("customerId", Any.String())
         .PostJson(dto)
         .RealInstance, 
       context.Response().RealInstance,
@@ -37,4 +42,6 @@ public class AddTodoActionSpecification
     context.Response().Should().HaveStatusCode(HttpStatusCode.OK);
     context.Response().BodyObject<Guid>().ToString().Should().NotBeEmpty();
   }
+
+  //bug some integration-level error response specifications
 }

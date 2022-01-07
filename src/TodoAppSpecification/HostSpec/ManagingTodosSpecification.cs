@@ -17,6 +17,9 @@ public class ManagingTodosSpecification
     var response = await flurlClient
       .Request("/todo")
       .WithHeader("Authorization", "Bearer " + TestTokens.GenerateToken())
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", Any.String())
       .AllowAnyHttpStatus()
       .PostJsonAsync(new AddTodoDto(
         new AddTodoDataDto("Meeting", "there's a meeting you need to attend"),
@@ -35,6 +38,9 @@ public class ManagingTodosSpecification
     var response1 = await flurlClient
       .Request("/todo")
       .WithHeader("Authorization", "Bearer " + TestTokens.GenerateToken())
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", Any.String())
       .PostJsonAsync(new AddTodoDto(
         new AddTodoDataDto("Meeting", "there's a meeting you need to attend"),
         new Dictionary<string, string>()));
@@ -42,6 +48,9 @@ public class ManagingTodosSpecification
     var response2 = await flurlClient
       .Request("/todo")
       .WithHeader("Authorization", $"Bearer {TestTokens.GenerateToken()}")
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", Any.String())
       .PostJsonAsync(new AddTodoDto(
         new AddTodoDataDto("Meeting", "there's a meeting you need to attend"),
         new Dictionary<string, string>()));
@@ -71,6 +80,9 @@ public class ManagingTodosSpecification
       .Request("/todo")
       .AllowAnyHttpStatus()
       .WithHeader("Authorization", "Bearer " + TestTokens.GenerateExpiredToken())
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", Any.String())
       .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
 
     response1.StatusCode.Should().Be(401);
@@ -87,6 +99,9 @@ public class ManagingTodosSpecification
       .Request("/todo")
       .AllowAnyHttpStatus()
       .WithHeader("Authorization", "Bearer " + TestTokens.GenerateTokenWithBadKey())
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", Any.String())
       .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
 
     response1.StatusCode.Should().Be(401);
@@ -103,6 +118,9 @@ public class ManagingTodosSpecification
       .Request("/todo")
       .AllowAnyHttpStatus()
       .WithHeader("Authorization", "Bearer " + TestTokens.GenerateTokenFromBadIssuer())
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", Any.String())
       .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
 
     response1.StatusCode.Should().Be(401);
@@ -118,10 +136,13 @@ public class ManagingTodosSpecification
     var response1 = await flurlClient
       .Request("/todo")
       .AllowAnyHttpStatus()
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", Any.String())
       .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
 
-    response1.StatusCode.Should().Be(401);
-    response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
+    response1.StatusCode.Should().Be(400);
+    response1.ResponseMessage.ReasonPhrase.Should().Be("Bad Request");
   }
 
   [Test]
@@ -133,6 +154,9 @@ public class ManagingTodosSpecification
     var response1 = await flurlClient
       .Request("/todo")
       .WithHeader("Authorization", "Bearer lol")
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", Any.String())
       .AllowAnyHttpStatus()
       .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
 
@@ -149,11 +173,14 @@ public class ManagingTodosSpecification
     var response1 = await flurlClient
       .Request("/todo")
       .WithHeader("Authorization", "")
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", Any.String())
       .AllowAnyHttpStatus()
       .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
 
-    response1.StatusCode.Should().Be(401);
-    response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
+    response1.StatusCode.Should().Be(400);
+    response1.ResponseMessage.ReasonPhrase.Should().Be("Bad Request");
   }
 
   [Test]
@@ -165,10 +192,13 @@ public class ManagingTodosSpecification
     var response1 = await flurlClient
       .Request("/todo")
       .WithHeader("Authorization", null)
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", Any.String())
       .AllowAnyHttpStatus()
       .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
 
-    response1.StatusCode.Should().Be(401);
-    response1.ResponseMessage.ReasonPhrase.Should().Be("Unauthorized");
+    response1.StatusCode.Should().Be(400);
+    response1.ResponseMessage.ReasonPhrase.Should().Be("Bad Request");
   }
 }
