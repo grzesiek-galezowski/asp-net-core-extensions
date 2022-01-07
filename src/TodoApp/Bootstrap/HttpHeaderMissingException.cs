@@ -2,11 +2,10 @@ using System;
 
 namespace TodoApp.Bootstrap;
 
-public class HttpHeaderMissingException : HttpRequestInvalidException //bug consider common exception
+public class HttpHeaderMissingException : HttpRequestInvalidException
 {
   public HttpHeaderMissingException(string headerName)
-  : base("trolololo todo") //bug todo
+  : base($"Expected header {headerName} to be an existing, non-null value")
   {
-    //bug derive from base
   }
 }

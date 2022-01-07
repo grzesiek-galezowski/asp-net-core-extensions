@@ -33,6 +33,11 @@ public class ServiceSupport : IEndpointsSupport
     LoggerFor(source).LogError(exception, "Request is invalid");
   }
 
+  public void UnhandledException(object source, Exception exception)
+  {
+    LoggerFor(source).LogError(exception, "Unhandled exception");
+  }
+
   private ILogger LoggerFor(object source)
   {
     return _loggerFactory.CreateLogger(source.GetType());

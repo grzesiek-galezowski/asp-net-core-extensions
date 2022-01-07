@@ -5,8 +5,7 @@ namespace TodoApp.Bootstrap;
 public class HttpHeaderInvalidValueException : HttpRequestInvalidException
 {
   public HttpHeaderInvalidValueException(string headerName, string expected, StringValues actual)
-  : base("Toto trolololo") //bug
+  : base($"Expected header {headerName} to have value {expected} but was {actual}")
   {
-    //bug derive from base
   }
 }

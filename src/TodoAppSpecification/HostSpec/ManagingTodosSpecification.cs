@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using System.Net.Mime;
 using Flurl.Http;
 using TodoApp.Http;
 
@@ -27,6 +28,7 @@ public class ManagingTodosSpecification
   [Test]
   public async Task ShouldBeAbleToLinkTodos()
   {
+    var customerId = Any.String();
     await using var appFactory = new AppFactory();
     var flurlClient = new FlurlClient(appFactory.CreateClient());
 
@@ -50,6 +52,9 @@ public class ManagingTodosSpecification
     var response3 = await flurlClient
       .Request($"/todo/{id1}/link/{id2}")
       .WithHeader("Authorization", $"Bearer {TestTokens.GenerateToken()}")
+      .WithHeader("Accept", MediaTypeNames.Application.Json)
+      .WithHeader("Content-Type", MediaTypeNames.Application.Json)
+      .SetQueryParam("customerId", customerId)
       .AllowAnyHttpStatus()
       .PostJsonAsync(new { title = "Meeting", content="there's a meeting you need to attend"});
 
