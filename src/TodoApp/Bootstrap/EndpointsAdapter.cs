@@ -17,7 +17,7 @@ public class EndpointsAdapter
   public EndpointsAdapter(
     ICommandFactory<CreateTodoRequestData, IAddTodoResponseInProgress> addTodoCommandFactory,
     ICommandFactory<LinkTodosRequestData, ILinkTodoResponseInProgress> linkTodoCommandFactory,
-    TokenValidationParameters tokenValidationParameters, 
+    TokenValidationParameters tokenValidationParameters,
     IEndpointsSupport support)
   {
     //bug exception handling endpoint
@@ -34,10 +34,10 @@ public class EndpointsAdapter
               AggregateCondition.ConsistingOf(
                 Conditions.HeaderAsExpected(HeaderNames.Accept, MediaTypeNames.Application.Json),
                 Conditions.HeaderAsExpected(HeaderNames.ContentType, MediaTypeNames.Application.Json),
-                Conditions.RouteContainsGuidNamed(Id1),
-                Conditions.RouteContainsGuidNamed(Id2),
                 Conditions.HeaderDefined(HeaderNames.Authorization),
-                Conditions.QueryParamDefined(CustomerId)),
+                Conditions.QueryParamDefined(CustomerId),
+                Conditions.RouteContainsGuidNamed(Id1),
+                Conditions.RouteContainsGuidNamed(Id2)),
               support,
               new EndpointWithSupportScope(
                 new FromRequestScopePropertySet(
@@ -52,27 +52,39 @@ public class EndpointsAdapter
                     linkTodoCommandFactory,
                     new ResponseInProgressFactory())))))));
 
-    //bug exception handling endpoint
-    //bug endpoint logging a generated request id
-    //bug request validation endpoint
-    //bug EndpointWithSupportScope should allow custom "value provider"
     AddTodoEndpoint =
-      new EndpointWithSupportScope(
-        new InitialScopePropertySet("Add a TODO item"), //bug remove this class
-        support,
-        new AuthorizationEndpoint(
-          tokenValidationParameters,
-          new ExecutingCommandEndpoint<CreateTodoRequestData, IAddTodoResponseInProgress>(
-            new AddTodoRequestDataParser(
-              new AddTodoDtoParser(
-                new AddTodoDataParser(
-                  new RequiredStringParser(nameof(AddTodoDataDto.Title)),
-                  new RequiredStringParser(nameof(AddTodoDataDto.Content))
-                ),
-                new DictionaryParser<string, string>(nameof(AddTodoDto.Links))
-              )),
-            addTodoCommandFactory,
-            new ResponseInProgressFactory())));
+      new EndpointWithFallbackExceptionHandling(support,
+        new EndpointWithRequestIdAsTraceId(
+          new EndpointWithSupportScope(
+            new FromRequestScopePropertySet(
+              ScopeProperty.FromConstant("operationName", "Add a TODO item"),
+              ScopeProperty.TraceIdentifierAs("requestId")),
+            support,
+            new HttpRequestCompletenessValidatingEndpoint(
+              AggregateCondition.ConsistingOf(
+                Conditions.HeaderAsExpected(HeaderNames.Accept, MediaTypeNames.Application.Json),
+                Conditions.HeaderAsExpected(HeaderNames.ContentType, MediaTypeNames.Application.Json),
+                Conditions.HeaderDefined(HeaderNames.Authorization),
+                Conditions.QueryParamDefined(CustomerId)
+              ),
+              support,
+              new EndpointWithSupportScope(
+                new FromRequestScopePropertySet(
+                  ScopeProperty.FromQuery(CustomerId)),
+                support,
+                new AuthorizationEndpoint(
+                  tokenValidationParameters,
+                  new ExecutingCommandEndpoint<CreateTodoRequestData, IAddTodoResponseInProgress>(
+                    new AddTodoRequestDataParser(
+                      new AddTodoDtoParser(
+                        new AddTodoDataParser(
+                          new RequiredStringParser(nameof(AddTodoDataDto.Title)),
+                          new RequiredStringParser(nameof(AddTodoDataDto.Content))
+                        ),
+                        new DictionaryParser<string, string>(nameof(AddTodoDto.Links))
+                      )),
+                    addTodoCommandFactory,
+                    new ResponseInProgressFactory())))))));
   }
 
   public IAsyncEndpoint LinkTodoEndpoint { get; }
