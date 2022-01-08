@@ -36,9 +36,9 @@ public class UserTodosDao : IUserTodosDao
     using var liteDb = new LiteDatabase(_stream);
     var persistentTodoDto = liteDb.GetCollection<PersistentTodoDto>().FindById(id);
     return new TodoCreatedData(
-      persistentTodoDto.Id.Value, 
-      persistentTodoDto.Title, 
-      persistentTodoDto.Content, 
-      persistentTodoDto.LinkedNotes.ToImmutableHashSet());
+      persistentTodoDto.Id.OrThrow(), 
+      persistentTodoDto.Title.OrThrow(), 
+      persistentTodoDto.Content.OrThrow(), 
+      persistentTodoDto.LinkedNotes.OrThrow().ToImmutableHashSet());
   }
 }

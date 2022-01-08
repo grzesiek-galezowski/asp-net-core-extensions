@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using TddXt.HttpContextMock;
 using TodoApp.Bootstrap;
 using TodoApp.Http;
+using TodoApp.Http.AddTodo;
 
 namespace TodoAppSpecification;
 
