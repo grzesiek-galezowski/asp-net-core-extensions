@@ -21,10 +21,10 @@ public class AddTodoCommand : IAppCommand
     _userTodos = userTodos;
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken)
+  public async Task Execute(CancellationToken cancellationToken)
   {
     var id = _idGenerator.Generate();
-    await _userTodos.SaveAsync(id, _requestData, cancellationToken);
-    await _responseInProgress.SuccessAsync(id);
+    await _userTodos.Save(id, _requestData, cancellationToken);
+    await _responseInProgress.Success(id);
   }
 }

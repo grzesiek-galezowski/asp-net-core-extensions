@@ -17,13 +17,13 @@ var serviceLogicRoot = app.Services.GetRequiredService<ServiceLogicRoot>();
 app.MapPost("/todo",
   async (HttpRequest request, HttpResponse response, CancellationToken token) =>
   {
-    await serviceLogicRoot.AddTodoEndpoint.HandleAsync(request, response, token);
+    await serviceLogicRoot.AddTodoEndpoint.Handle(request, response, token);
   });
 
 app.MapPost("/todo/{id1}/link/{id2}",
   async (HttpRequest request, HttpResponse response, CancellationToken token) =>
   {
-    await serviceLogicRoot.LinkTodoEndpoint.HandleAsync(request, response, token);
+    await serviceLogicRoot.LinkTodoEndpoint.Handle(request, response, token);
   });
 
 app.Run();

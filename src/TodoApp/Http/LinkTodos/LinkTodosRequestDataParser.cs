@@ -8,7 +8,7 @@ namespace TodoApp.Http.LinkTodos;
 
 public class LinkTodosRequestDataParser : IRequestParser<LinkTodosRequestData>
 {
-  public async Task<LinkTodosRequestData> ParseAsync(HttpRequest request,
+  public async Task<LinkTodosRequestData> Parse(HttpRequest request,
     CancellationToken cancellationToken)
   {
     return await Task.FromResult(new LinkTodosRequestData(request.Id1(), request.Id2()));

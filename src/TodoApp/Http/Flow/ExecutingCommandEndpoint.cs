@@ -22,12 +22,14 @@ public class ExecutingCommandEndpoint<TDto, TResponse> : IAsyncEndpoint
     _responseInProgressFactory = responseInProgressFactory;
   }
 
-  public async Task HandleAsync(HttpRequest request, HttpResponse response,
+  public async Task Handle(
+    HttpRequest request, 
+    HttpResponse response,
     CancellationToken cancellationToken)
   {
-    var data = await _requestParser.ParseAsync(request, cancellationToken);
+    var data = await _requestParser.Parse(request, cancellationToken);
     var responseInProgress = _responseInProgressFactory.CreateResponseInProgress(response);
     var command = _todoCommandFactory.CreateCommand(data, responseInProgress);
-    await command.ExecuteAsync(cancellationToken);
+    await command.Execute(cancellationToken);
   }
 }

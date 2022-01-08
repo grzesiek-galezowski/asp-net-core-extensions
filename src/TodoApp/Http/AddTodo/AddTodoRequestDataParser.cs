@@ -18,7 +18,7 @@ public class AddTodoRequestDataParser : IRequestParser<CreateTodoRequestData>
 
   //bug get back to this parser when second request with body is added
   // and make it more generic, e.g. body parser or sth.
-  public async Task<CreateTodoRequestData> ParseAsync(HttpRequest request, CancellationToken cancellationToken)
+  public async Task<CreateTodoRequestData> Parse(HttpRequest request, CancellationToken cancellationToken)
   {
     using var doc = await JsonDocument.ParseAsync(request.Body, cancellationToken: cancellationToken);
 

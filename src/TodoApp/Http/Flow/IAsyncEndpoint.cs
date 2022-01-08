@@ -6,5 +6,5 @@ namespace TodoApp.Http.Flow;
 
 public interface IAsyncEndpoint
 {
-  Task HandleAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken);
+  Task Handle(HttpRequest request, HttpResponse response, CancellationToken cancellationToken);
 }

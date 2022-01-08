@@ -19,7 +19,7 @@ public class AuthorizationEndpoint : IAsyncEndpoint
     _next = next;
   }
 
-  public async Task HandleAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
+  public async Task Handle(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
   {
     var invokeNext = false;
     try
@@ -60,7 +60,7 @@ public class AuthorizationEndpoint : IAsyncEndpoint
 
     if (invokeNext)
     {
-      await _next.HandleAsync(request, response, cancellationToken);
+      await _next.Handle(request, response, cancellationToken);
     }
     else
     {

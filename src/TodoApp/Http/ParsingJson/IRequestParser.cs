@@ -6,5 +6,5 @@ namespace TodoApp.Http.ParsingJson;
 
 public interface IRequestParser<T>
 {
-  Task<T> ParseAsync(HttpRequest request, CancellationToken cancellationToken);
+  Task<T> Parse(HttpRequest request, CancellationToken cancellationToken);
 }

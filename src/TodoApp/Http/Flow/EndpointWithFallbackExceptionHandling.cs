@@ -18,11 +18,11 @@ public class EndpointWithFallbackExceptionHandling : IAsyncEndpoint
     _next = next;
   }
 
-  public async Task HandleAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
+  public async Task Handle(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
   {
     try
     {
-      await _next.HandleAsync(request, response, cancellationToken);
+      await _next.Handle(request, response, cancellationToken);
     }
     catch (Exception e)
     {

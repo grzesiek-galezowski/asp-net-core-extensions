@@ -43,12 +43,12 @@ public class HttpRequestCompletenessValidatingEndpoint : IAsyncEndpoint
     _support = support;
   }
 
-  public async Task HandleAsync(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
+  public async Task Handle(HttpRequest request, HttpResponse response, CancellationToken cancellationToken)
   {
     try
     {
       _httpRequestCondition.Assert(request);
-      await _next.HandleAsync(request, response, cancellationToken);
+      await _next.Handle(request, response, cancellationToken);
     }
     catch (HttpRequestInvalidException e) //bug make all exceptions inherit some sort of validation exception
     //bug make catch exception a fallback for unknown exceptions

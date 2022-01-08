@@ -14,7 +14,7 @@ public class AddTodoResponseInProgress : IAddTodoResponseInProgress
     _response = response;
   }
 
-  public async Task SuccessAsync(Guid id)
+  public async Task Success(Guid id)
   {
     var result = Results.Ok(id);
     await result.ExecuteAsync(_response.HttpContext);

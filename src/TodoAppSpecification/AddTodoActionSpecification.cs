@@ -28,7 +28,7 @@ public class AddTodoActionSpecification
       //bug the content will be truncated when it reaches 200 chars
       //bug and the truncated note will be appended to the response?
     
-    await serviceLogicRoot.AddTodoEndpoint.HandleAsync(
+    await serviceLogicRoot.AddTodoEndpoint.Handle(
       context.Request()
         .WithHeader("Authorization", $"Bearer {TestTokens.GenerateToken()}")
         .WithHeader("Content-Type", MediaTypeNames.Application.Json)
