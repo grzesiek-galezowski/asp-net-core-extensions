@@ -17,7 +17,7 @@ public class ServiceSupport : IEndpointsSupport
   //bug obsolete?
   public IDisposable BeginScope(object source, string operationName)
   {
-    var dictionary = new Dictionary<string, object>() //bug add serilog or nlog config
+    var dictionary = new Dictionary<string, object>()
     {
       ["operationName"] = operationName
     };

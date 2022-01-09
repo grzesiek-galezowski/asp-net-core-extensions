@@ -8,6 +8,7 @@ using NLog.Config;
 using NLog.Targets;
 using NLog.Web;
 using TodoApp.Bootstrap;
+using TodoApp.Support;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,13 +17,7 @@ builder.Services.AddSingleton(ctx => new ServiceLogicRoot(
   ctx.GetRequiredService<ILoggerFactory>()));
 
 builder.Logging.ClearProviders();
-builder.Logging.AddNLog(provider =>
-{
-  var loggingConfiguration = new LoggingConfiguration();
-  var target = new ColoredConsoleTarget("coloredConsole");
-  ConfigForLogger.ConfigureAndAddLoggingTarget(target, loggingConfiguration);
-  return new LogFactory(loggingConfiguration);
-});
+builder.Logging.AddNLog(_ => ConfigForLogger.CreateLogFactory(new ColoredConsoleTarget("coloredConsole")));
 builder.Logging.AddNLogWeb();
 builder.Logging.SetMinimumLevel(LogLevel.Trace);
 builder.Host.UseNLog();

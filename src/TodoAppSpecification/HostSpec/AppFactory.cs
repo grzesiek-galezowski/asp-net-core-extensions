@@ -9,6 +9,7 @@ using NLog.Config;
 using NLog.Targets;
 using NLog.Web;
 using TodoApp.Bootstrap;
+using TodoApp.Support;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace TodoAppSpecification.HostSpec;
@@ -40,14 +41,7 @@ public class AppFactory : WebApplicationFactory<ServiceLogicRoot>
       .ConfigureLogging(loggingBuilder =>
       {
         loggingBuilder.ClearProviders();
-        loggingBuilder.AddNLog(_ =>
-        {
-          var loggingConfiguration = new LoggingConfiguration();
-          ConfigForLogger.ConfigureAndAddLoggingTarget(
-            _inMemoryLogs, 
-            loggingConfiguration);
-          return new LogFactory(loggingConfiguration);
-        });
+        loggingBuilder.AddNLog(_ => ConfigForLogger.CreateLogFactory(_inMemoryLogs));
         loggingBuilder.AddNLogWeb();
       })
       .UseNLog();
