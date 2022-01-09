@@ -5,16 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Sprache;
+using TodoApp.Http.Support;
 
 namespace TodoApp.Http.Flow;
 
 public class AuthorizationEndpoint : IAsyncEndpoint
 {
+  private readonly IEndpointsSupport _support;
   private readonly TokenValidationParameters _tokenValidationParameters;
   private readonly IAsyncEndpoint _next;
 
-  public AuthorizationEndpoint(TokenValidationParameters tokenValidationParameters, IAsyncEndpoint next)
+  public AuthorizationEndpoint(IEndpointsSupport support,
+    TokenValidationParameters tokenValidationParameters, IAsyncEndpoint next)
   {
+    _support = support;
     _tokenValidationParameters = tokenValidationParameters;
     _next = next;
   }
@@ -54,8 +58,7 @@ public class AuthorizationEndpoint : IAsyncEndpoint
     }
     catch (Exception e)
     {
-      Console.WriteLine(e);
-      //bug log the exception!
+      _support.AuthorizationFailed(this, e);
     }
 
     if (invokeNext)

@@ -61,6 +61,7 @@ public class EndpointsAdapter
             new EndpointWithSupportScope(policy.AdditionalPostValidationSupportScopeProperties(),
               support,
               new AuthorizationEndpoint(
+                support,
                 policy.TokenValidationParameters(),
                 executingCommandEndpoint))))));
   }

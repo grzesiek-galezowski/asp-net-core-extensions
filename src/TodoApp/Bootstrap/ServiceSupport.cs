@@ -39,6 +39,11 @@ public class ServiceSupport : IEndpointsSupport
     LoggerFor(source).LogError(exception, "Unhandled exception");
   }
 
+  public void AuthorizationFailed(object source, Exception exception)
+  {
+    LoggerFor(source).LogError(exception, "Authorization failed");
+  }
+
   private ILogger LoggerFor(object source)
   {
     return _loggerFactory.CreateLogger(source.GetType());
