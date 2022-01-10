@@ -4,7 +4,6 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
@@ -67,15 +66,15 @@ public class Tests
     httpContextMock.RealInstance.Request.QueryString.ToString().Should().Be("?lol=a,b");
   }
 
-  [Test]
-  public async Task ShouldAllowGettingLoggerFactory()
-  {
-    var httpContextMock = HttpContextMock.Default();
-    httpContextMock.RealInstance.RequestServices.GetRequiredService<ILoggerFactory>()
-      .Should().NotBeNull();
-  }
-    
-  [Test]
+    [Test]
+    public void ShouldAllowGettingLoggerFactory()
+    {
+        var httpContextMock = HttpContextMock.Default();
+        httpContextMock.RealInstance.RequestServices.GetRequiredService<ILoggerFactory>()
+          .Should().NotBeNull();
+    }
+
+    [Test]
   public void ShouldAllowSettingBytesBody()
   {
     var httpContextMock = HttpContextMock.Default();

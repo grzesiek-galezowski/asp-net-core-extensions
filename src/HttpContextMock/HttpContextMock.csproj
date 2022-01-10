@@ -1,12 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <AssemblyName>TddXt.HttpContextMock</AssemblyName>
     <RootNamespace>TddXt.HttpContextMock</RootNamespace>
     <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
     <WarningsAsErrors>nullable</WarningsAsErrors>
-    <Version>0.5.0</Version>
+    <Version>5.0.0</Version>
     <Authors>Grzegorz Gałęzowski</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>A mock for HttpContext allowing to setup HttpRequest and verify HttpResponse</Description>
@@ -18,17 +19,14 @@
     <LangVersion>latest</LangVersion>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
-
-
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.2.0" />
-    <PackageReference Include="FluentAssertions.Analyzers" Version="0.13.0" >
+    <PackageReference Include="FluentAssertions.Analyzers" Version="0.13.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
   </ItemGroup>

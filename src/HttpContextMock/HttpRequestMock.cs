@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Primitives;
 using TddXt.HttpContextMock.Internal;
 
@@ -68,7 +67,8 @@ public class HttpRequestMock
   {
     foreach (var propertyInfo in o.GetType().GetProperties())
     {
-      WithQueryParam(propertyInfo.Name, propertyInfo.GetValue(o)?.ToString());
+        var propertyValue = propertyInfo.GetValue(o)?.ToString() ?? throw new InvalidOperationException("null query param string");
+        WithQueryParam(propertyInfo.Name, propertyValue);
     }
     return this;
   }
@@ -79,7 +79,7 @@ public class HttpRequestMock
     return this;
   }
 
-  public HttpRequestMock WithQueryParam(string key, string? value)
+  public HttpRequestMock WithQueryParam(string key, string value)
   {
     RealInstance.QueryString = RealInstance.QueryString.Add(key, value);
     return this;
