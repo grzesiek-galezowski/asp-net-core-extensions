@@ -2,27 +2,34 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using LiteDB.Engine;
+using Microsoft.IdentityModel.Tokens;
 using TodoApp.Db;
 using TodoApp.Http;
+using TodoApp.Http.Flow;
 using TodoApp.Logic;
 using TodoApp.Random;
+using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
 namespace TodoApp.Bootstrap;
 
 public class ServiceLogicRoot : IAsyncDisposable
 {
-  private readonly Stream _tempStream;
+  private readonly Stream _databaseStream;
   private readonly EndpointsAdapter _endpointsAdapter;
 
-  public ServiceLogicRoot()
+  public ServiceLogicRoot(
+    TokenValidationParameters tokenValidationParameters, 
+    ILoggerFactory loggerFactory)
   {
-    _tempStream = new TempStream();
+    _databaseStream = new TempStream();
     var appLogicRoot = new AppLogicRoot(
-      new UserTodosDao(_tempStream),
+      new UserTodosDao(_databaseStream),
       new IdGenerator());
     var endpointsAdapter = new EndpointsAdapter(
       appLogicRoot.TodoCommandFactory,
-      appLogicRoot.TodoCommandFactory);
+      appLogicRoot.TodoCommandFactory,
+      tokenValidationParameters, 
+      new ServiceSupport(loggerFactory));
     _endpointsAdapter = endpointsAdapter;
   }
 
@@ -31,7 +38,7 @@ public class ServiceLogicRoot : IAsyncDisposable
 
   public ValueTask DisposeAsync()
   {
-    _tempStream.Dispose();
+    _databaseStream.Dispose();
     return ValueTask.CompletedTask;
   }
 }

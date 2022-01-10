@@ -18,7 +18,7 @@ public class UserTodosDao : IUserTodosDao
     _stream = stream;
   }
 
-  public async Task SaveAsync(Guid id, CreateTodoRequestData todoData, CancellationToken cancellationToken)
+  public async Task Save(Guid id, CreateTodoRequestData todoData, CancellationToken cancellationToken)
   {
     using var liteDb = new LiteDatabase(_stream);
     liteDb.GetCollection<PersistentTodoDto>().Insert(
@@ -31,14 +31,14 @@ public class UserTodosDao : IUserTodosDao
       });
   }
 
-  public async Task<TodoCreatedData> LoadAsync(Guid id, CancellationToken cancellationToken)
+  public async Task<TodoCreatedData> Load(Guid id, CancellationToken cancellationToken)
   {
     using var liteDb = new LiteDatabase(_stream);
     var persistentTodoDto = liteDb.GetCollection<PersistentTodoDto>().FindById(id);
     return new TodoCreatedData(
-      persistentTodoDto.Id.Value, 
-      persistentTodoDto.Title, 
-      persistentTodoDto.Content, 
-      persistentTodoDto.LinkedNotes.ToImmutableHashSet());
+      persistentTodoDto.Id.OrThrow(), 
+      persistentTodoDto.Title.OrThrow(), 
+      persistentTodoDto.Content.OrThrow(), 
+      persistentTodoDto.LinkedNotes.OrThrow().ToImmutableHashSet());
   }
 }

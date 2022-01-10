@@ -20,10 +20,10 @@ public class LinkTodoCommand : IAppCommand
     _responseInProgress = responseInProgress;
   }
 
-  public async Task ExecuteAsync(CancellationToken cancellationToken)
+  public async Task Execute(CancellationToken cancellationToken)
   {
-    var todo1 = await _userTodos.LoadAsync(_id1, cancellationToken);
-    var todo2 = await _userTodos.LoadAsync(_id2, cancellationToken);
+    var todo1 = await _userTodos.Load(_id1, cancellationToken);
+    var todo2 = await _userTodos.Load(_id2, cancellationToken);
     todo1 = todo1 with { Links = todo1.Links.Add(todo2.Id)};
     await _responseInProgress.LinkedSuccessfully(todo1, todo2, cancellationToken);
   }

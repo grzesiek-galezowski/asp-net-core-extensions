@@ -1,6 +1,4 @@
-using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
@@ -14,7 +12,7 @@ public static class TestTokens
 {
   public static string Issuer { get; } = Guid.NewGuid().ToString();
   public static SecurityKey SecurityKey { get; }
-  public static SigningCredentials SigningCredentials { get; }
+  private static SigningCredentials SigningCredentials { get; }
 
   private static readonly JwtSecurityTokenHandler TokenHandler = new();
   private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
@@ -42,7 +40,7 @@ public static class TestTokens
 
   public static string GenerateTokenFromBadIssuer(params Claim[] claims)
   {
-    return GenerateToken(claims, Issuer + "a", SigningCredentials, DateTime.UtcNow.AddMinutes(20));
+    return GenerateToken(claims, Issuer + Any.Char(), SigningCredentials, DateTime.UtcNow.AddMinutes(20));
   }
 
   public static string GenerateExpiredToken(params Claim[] claims)
@@ -52,7 +50,7 @@ public static class TestTokens
 
   private static string GenerateToken(Claim[] claims, string issuer, SigningCredentials signingCredentials, DateTime expiryTime)
   {
-    return TokenHandler.WriteToken(
+    var generatedToken = TokenHandler.WriteToken(
       new JwtSecurityToken(
         issuer,
         null,
@@ -60,6 +58,8 @@ public static class TestTokens
         null,
         expiryTime,
         signingCredentials));
+
+    return generatedToken;
   }
 
   private static SigningCredentials CreateSigningCredentials(SecurityKey securityKey)

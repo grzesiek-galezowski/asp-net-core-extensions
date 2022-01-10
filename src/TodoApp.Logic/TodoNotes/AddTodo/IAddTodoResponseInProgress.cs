@@ -5,5 +5,5 @@ namespace TodoApp.Logic.TodoNotes.AddTodo;
 
 public interface IAddTodoResponseInProgress
 {
-  Task SuccessAsync(Guid id);
+  Task Success(Guid id);
 }

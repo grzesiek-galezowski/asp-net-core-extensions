@@ -1,30 +1,41 @@
 using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
+using NLog.Web;
 using TodoApp.Bootstrap;
-
+using TodoApp.Support;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAuthorization();
-builder.Services.AddTodoAppSpecificJwtAuthenticationConfig();
-builder.Services.AddSingleton(ctx => new ServiceLogicRoot());
+builder.Services.AddSingleton(ctx => new ServiceLogicRoot(
+  ctx.GetTokenValidationParameters(),
+  ctx.GetRequiredService<ILoggerFactory>()));
+
+builder.Logging.ClearProviders();
+builder.Logging.AddNLog(_ => ConfigForLogger.CreateLogFactory(new ColoredConsoleTarget("coloredConsole")));
+builder.Logging.AddNLogWeb();
+builder.Logging.SetMinimumLevel(LogLevel.Trace);
+builder.Host.UseNLog();
 
 var app = builder.Build();
-app.UseAuthentication();
-app.UseAuthorization();
+
+var serviceLogicRoot = app.Services.GetRequiredService<ServiceLogicRoot>();
 
 app.MapPost("/todo",
-  async ([FromServices] ServiceLogicRoot root, HttpRequest request, HttpResponse response, CancellationToken token) =>
+  async (HttpRequest request, HttpResponse response, CancellationToken token) =>
   {
-    await root.AddTodoEndpoint.HandleAsync(request, response, token);
-  }).RequireAuthorization();
+    await serviceLogicRoot.AddTodoEndpoint.Handle(request, response, token);
+  });
 
 app.MapPost("/todo/{id1}/link/{id2}",
-  async ([FromServices] ServiceLogicRoot root, HttpRequest request, HttpResponse response, CancellationToken token) =>
+  async (HttpRequest request, HttpResponse response, CancellationToken token) =>
   {
-    await root.LinkTodoEndpoint.HandleAsync(request, response, token);
+    await serviceLogicRoot.LinkTodoEndpoint.Handle(request, response, token);
   });
 
 app.Run();
@@ -32,5 +43,7 @@ app.Run();
 
 namespace TodoApp.Bootstrap
 {
-  public partial class Program { }
+  public partial class Program
+  {
+  }
 }

@@ -7,6 +7,6 @@ namespace TodoApp.Logic.TodoNotes;
 
 public interface IUserTodosDao
 {
-  Task SaveAsync(Guid id, CreateTodoRequestData todoData, CancellationToken cancellationToken);
-  Task<TodoCreatedData> LoadAsync(Guid id, CancellationToken cancellationToken);
+  Task Save(Guid id, CreateTodoRequestData todoData, CancellationToken cancellationToken);
+  Task<TodoCreatedData> Load(Guid id, CancellationToken cancellationToken);
 }

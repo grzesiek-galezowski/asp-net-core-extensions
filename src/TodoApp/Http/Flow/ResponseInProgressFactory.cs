@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Http;
+using TodoApp.Http.AddTodo;
+using TodoApp.Http.LinkTodos;
 using TodoApp.Logic.TodoNotes.AddTodo;
 using TodoApp.Logic.TodoNotes.LinkTodos;
 
-namespace TodoApp.Http;
+namespace TodoApp.Http.Flow;
 
-public interface IResponseInProgressFactory<T>
+public interface IResponseInProgressFactory<out T>
 {
   T CreateResponseInProgress(HttpResponse response);
 }

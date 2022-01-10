@@ -5,5 +5,5 @@ namespace TodoApp.Logic.TodoNotes;
 
 public interface IAppCommand
 {
-  Task ExecuteAsync(CancellationToken cancellationToken);
+  Task Execute(CancellationToken cancellationToken);
 }

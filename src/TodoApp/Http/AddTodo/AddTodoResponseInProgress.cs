@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using TodoApp.Logic;
 using TodoApp.Logic.TodoNotes.AddTodo;
 
-namespace TodoApp.Http;
+namespace TodoApp.Http.AddTodo;
 
 public class AddTodoResponseInProgress : IAddTodoResponseInProgress
 {
@@ -15,7 +14,7 @@ public class AddTodoResponseInProgress : IAddTodoResponseInProgress
     _response = response;
   }
 
-  public async Task SuccessAsync(Guid id)
+  public async Task Success(Guid id)
   {
     var result = Results.Ok(id);
     await result.ExecuteAsync(_response.HttpContext);
