@@ -3,11 +3,14 @@ using System.IO;
 using System.Threading.Tasks;
 using LiteDB.Engine;
 using Microsoft.IdentityModel.Tokens;
+using NLog;
+using NLog.Targets;
 using TodoApp.Db;
 using TodoApp.Http;
 using TodoApp.Http.Flow;
 using TodoApp.Logic;
 using TodoApp.Random;
+using TodoApp.Support;
 using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
 namespace TodoApp.Bootstrap;
@@ -40,5 +43,11 @@ public class ServiceLogicRoot : IAsyncDisposable
   {
     _databaseStream.Dispose();
     return ValueTask.CompletedTask;
+  }
+
+  public static LogFactory CreateLogFactory()
+  {
+      //bug logging adapter?
+      return ConfigForLogger.CreateLogFactory(new ColoredConsoleTarget("coloredConsole"));
   }
 }
