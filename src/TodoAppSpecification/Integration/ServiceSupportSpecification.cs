@@ -19,12 +19,7 @@ public class ServiceSupportSpecification
   {
     //GIVEN
     var inMemoryLogs = new MemoryTarget("memory");
-    using var loggerFactory = new LoggerFactory(new[]
-    {
-      new NLogLoggerProvider(NLogAspNetCoreOptions.Default,
-        ConfigForLogger.CreateLogFactory(inMemoryLogs))
-    });
-    var support = new ServiceSupport(loggerFactory);
+    var support = CreateServiceSupport(inMemoryLogs);
     var customerId = Any.String();
     var requestId = Any.String();
     var operationName = Any.String();
@@ -49,6 +44,17 @@ public class ServiceSupportSpecification
       $"|requestId={requestId}" +
       $"|operationName={operationName}" +
       $"|customerId={customerId}");
+  }
+
+  private static ServiceSupport CreateServiceSupport(MemoryTarget inMemoryLogs)
+  {
+    using var loggerFactory = new LoggerFactory(new[]
+    {
+      new NLogLoggerProvider(NLogAspNetCoreOptions.Default,
+        LoggingAdapter.CreateLogFactory(inMemoryLogs))
+    });
+    var support = LoggingAdapter.CreateServiceSupport(loggerFactory));
+    return support;
   }
 
   private static string CurrentDateString()

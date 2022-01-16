@@ -41,7 +41,7 @@ public class AppFactory : WebApplicationFactory<ServiceLogicRoot>
       .ConfigureLogging(loggingBuilder =>
       {
         loggingBuilder.ClearProviders();
-        loggingBuilder.AddNLog(_ => ConfigForLogger.CreateLogFactory(_inMemoryLogs));
+        loggingBuilder.AddNLog(_ => LoggingAdapter.CreateLogFactory(_inMemoryLogs));
         loggingBuilder.AddNLogWeb();
       })
       .UseNLog();

@@ -39,7 +39,7 @@ public class AuthorizationEndpoint : IAsyncEndpoint
       {
         var claimsPrincipal = tokenHandler.ValidateToken(
           token, 
-          new TokenValidationParameters()
+          new TokenValidationParameters
           {
             ValidIssuer = _tokenValidationParameters.ValidIssuer,
             IssuerSigningKey = _tokenValidationParameters.IssuerSigningKey,
@@ -47,7 +47,6 @@ public class AuthorizationEndpoint : IAsyncEndpoint
             ValidateActor = false,
             ValidateAudience = false,
             ValidateTokenReplay = false,
-            //AuthenticationType = 
           }, out var securityToken);
 
         if (securityToken != null)

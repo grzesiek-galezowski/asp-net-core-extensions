@@ -14,7 +14,8 @@ public static class AppBuilderExtensions
 {
   public static TokenValidationParameters GetTokenValidationParameters(this IServiceProvider serviceProvider)
   {
-    return serviceProvider.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>().Get(JwtBearerDefaults.AuthenticationScheme).TokenValidationParameters;
+    return serviceProvider.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
+      .Get(JwtBearerDefaults.AuthenticationScheme).TokenValidationParameters;
   }
 
   public static void SetupNLog(this WebApplicationBuilder webApplicationBuilder)
