@@ -32,7 +32,7 @@ public class ServiceLogicRoot : IAsyncDisposable
       appLogicRoot.TodoCommandFactory,
       appLogicRoot.TodoCommandFactory,
       tokenValidationParameters, 
-      new ServiceSupport(loggerFactory));
+      LoggingAdapter.CreateServiceSupport(loggerFactory));
     _endpointsAdapter = endpointsAdapter;
   }
 
@@ -47,7 +47,6 @@ public class ServiceLogicRoot : IAsyncDisposable
 
   public static LogFactory CreateLogFactory()
   {
-      //bug logging adapter?
-      return ConfigForLogger.CreateLogFactory(new ColoredConsoleTarget("coloredConsole"));
+      return LoggingAdapter.CreateConsoleLogFactory();
   }
 }
