@@ -23,11 +23,11 @@ public static class ConfigForLogger
     loggingConfiguration.AddRuleForAllLevels(target);
   }
 
-  public static LogFactory CreateLogFactory(TargetWithLayout inMemoryLogs)
+  public static LogFactory CreateLogFactory(TargetWithLayout target)
   {
     var loggingConfiguration = new LoggingConfiguration();
     ConfigForLogger.ConfigureAndAddLoggingTarget(
-      inMemoryLogs,
+      target,
       loggingConfiguration);
     return new LogFactory(loggingConfiguration);
   }

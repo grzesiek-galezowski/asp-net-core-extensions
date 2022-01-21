@@ -43,7 +43,7 @@ public class AddTodoItemRequestProcessingPolicy : IRequestProcessingPolicy
   public FromRequestScopePropertySet InitialSupportScopeProperties()
   {
     return new FromRequestScopePropertySet(
-      ScopeProperty.FromConstant("operationName", "Link TODO items"),
+      ScopeProperty.FromConstant("operationName", "Add TODO item"),
       ScopeProperty.TraceIdentifierAs("requestId"));
   }
 }
