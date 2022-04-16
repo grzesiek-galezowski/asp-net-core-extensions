@@ -1,4 +1,4 @@
-namespace TodoApp.Http.HttpValidation;
+namespace HttpContextExtensions;
 
 public class HttpRouteElementMissingException : HttpRequestInvalidException
 {

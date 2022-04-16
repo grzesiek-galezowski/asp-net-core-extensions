@@ -1,6 +1,4 @@
-using System;
-
-namespace TodoApp.Http.HttpValidation;
+namespace HttpContextExtensions;
 
 public class HttpRequestInvalidException : Exception
 {

@@ -13,6 +13,7 @@ public static class LoggingAdapter
   {
     return CreateLogFactory(new ColoredConsoleTarget("coloredConsole"));
   }
+
   public static LogFactory CreateLogFactory(TargetWithLayout target)
   {
     var loggingConfiguration = new LoggingConfiguration();

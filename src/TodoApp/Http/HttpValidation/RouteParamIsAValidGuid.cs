@@ -1,4 +1,4 @@
-using System;
+using HttpContextExtensions;
 using Microsoft.AspNetCore.Http;
 
 namespace TodoApp.Http.HttpValidation;
@@ -14,16 +14,6 @@ public class RouteParamIsAValidGuid : IHttpRequestCondition
 
   public void Assert(HttpRequest request)
   {
-    var requestRouteValue = request.RouteValues[_name];
-
-    if (requestRouteValue == null)
-    {
-      throw new HttpRouteElementMissingException(_name);
-    } //bug separate assertion?
-
-    if (!Guid.TryParse(requestRouteValue.ToString(), out _))
-    {
-      throw new HttpRouteElementIsNotAValidGuidException(_name, requestRouteValue);
-    }
+    request.GetTypedRoute().Guid(_name);
   }
 }

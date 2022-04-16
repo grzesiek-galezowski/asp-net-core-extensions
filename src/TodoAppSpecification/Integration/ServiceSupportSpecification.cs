@@ -53,7 +53,7 @@ public class ServiceSupportSpecification
       new NLogLoggerProvider(NLogAspNetCoreOptions.Default,
         LoggingAdapter.CreateLogFactory(inMemoryLogs))
     });
-    var support = LoggingAdapter.CreateServiceSupport(loggerFactory));
+    var support = LoggingAdapter.CreateServiceSupport(loggerFactory);
     return support;
   }
 

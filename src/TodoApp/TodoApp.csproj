@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HttpContextExtensions\HttpContextExtensions.csproj" />
     <ProjectReference Include="..\TodoApp.Logic\TodoApp.Logic.csproj" />
   </ItemGroup>
 

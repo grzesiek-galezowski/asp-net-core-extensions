@@ -1,3 +1,5 @@
+using HttpContextExtensions;
+
 namespace TodoApp.Http.HttpValidation;
 
 public class HttpRouteElementIsNotAValidGuidException : HttpRequestInvalidException
