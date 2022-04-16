@@ -48,7 +48,7 @@ public class ServiceSupportSpecification
 
   private static ServiceSupport CreateServiceSupport(MemoryTarget inMemoryLogs)
   {
-    using var loggerFactory = new LoggerFactory(new[]
+    var loggerFactory = new LoggerFactory(new[]
     {
       new NLogLoggerProvider(NLogAspNetCoreOptions.Default,
         LoggingAdapter.CreateLogFactory(inMemoryLogs))
