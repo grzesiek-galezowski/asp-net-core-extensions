@@ -1,8 +1,7 @@
-﻿namespace TodoAppSpecification.Integration;
+﻿namespace TodoAppSpecification.Integration.Support;
 
-public class ServiceSupportSpecification
+public class ServiceSupportAdapterSpecification
 {
-
   [Test]
   public void ShouldLogAuthorizationErrorAccordingToFormat()
   {
