@@ -9,7 +9,6 @@ public static class ConfigForLogger
 {
   public static void ConfigureAndAddLoggingTarget(TargetWithLayout target, LoggingConfiguration loggingConfiguration)
   {
-    //bug integration tests of support should be possible now
     target.Layout =
       Layout.FromString( //bug FromMethod allows even more customization
         "${longdate}" +

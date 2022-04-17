@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Mime;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;

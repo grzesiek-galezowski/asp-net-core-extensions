@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using LiteDB.Engine;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
-using NLog.Targets;
 using TodoApp.Db;
 using TodoApp.Http;
 using TodoApp.Http.Flow;
@@ -27,7 +26,7 @@ public class ServiceLogicRoot : IAsyncDisposable
     _databaseStream = new TempStream();
     var appLogicRoot = new AppLogicRoot(
       new UserTodosDao(_databaseStream),
-      new IdGenerator());
+      new NewGuidBasedIdSequence());
     var endpointsAdapter = new EndpointsAdapter(
       appLogicRoot.TodoCommandFactory,
       appLogicRoot.TodoCommandFactory,

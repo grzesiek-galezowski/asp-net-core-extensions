@@ -6,10 +6,10 @@ public class AppLogicRoot
 {
   public TodoCommandFactory TodoCommandFactory { get; }
 
-  public AppLogicRoot(IUserTodosDao userTodosDao, IIdGenerator idGenerator)
+  public AppLogicRoot(IUserTodosDao userTodosDao, IIdSequence idSequence)
   {
     TodoCommandFactory = new TodoCommandFactory(
-      idGenerator, 
+      idSequence, 
       userTodosDao);
   }
 }

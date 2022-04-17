@@ -2,7 +2,7 @@ using System;
 
 namespace TodoApp.Logic;
 
-public interface IIdGenerator
+public interface IIdSequence
 {
   Guid Generate();
 }

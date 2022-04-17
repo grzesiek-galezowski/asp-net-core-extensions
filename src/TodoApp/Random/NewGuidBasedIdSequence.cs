@@ -3,7 +3,7 @@ using TodoApp.Logic;
 
 namespace TodoApp.Random;
 
-public class IdGenerator : IIdGenerator
+public class NewGuidBasedIdSequence : IIdSequence
 {
   public Guid Generate()
   {

@@ -4,13 +4,10 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Config;
 using NLog.Targets;
 using NLog.Web;
 using TodoApp.Bootstrap;
 using TodoApp.Support;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace TodoAppSpecification.HostSpec;
 

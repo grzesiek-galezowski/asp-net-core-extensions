@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using NLog.Targets;
 using NLog.Web;
-using TodoApp.Bootstrap;
 using TodoApp.Support;
 
 namespace TodoAppSpecification.Integration;

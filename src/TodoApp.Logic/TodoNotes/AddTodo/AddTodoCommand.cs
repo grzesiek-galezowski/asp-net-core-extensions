@@ -6,16 +6,16 @@ namespace TodoApp.Logic.TodoNotes.AddTodo;
 public class AddTodoCommand : IAppCommand
 {
   private readonly CreateTodoRequestData _requestData;
-  private readonly IIdGenerator _idGenerator;
+  private readonly IIdSequence _idSequence;
   private readonly IAddTodoResponseInProgress _responseInProgress;
   private readonly IUserTodosDao _userTodos;
 
   public AddTodoCommand(CreateTodoRequestData requestData,
-    IIdGenerator idGenerator,
+    IIdSequence idSequence,
     IUserTodosDao userTodos,
     IAddTodoResponseInProgress addTodoResponseInProgress)
   {
-    _idGenerator = idGenerator;
+    _idSequence = idSequence;
     _responseInProgress = addTodoResponseInProgress;
     _requestData = requestData;
     _userTodos = userTodos;
@@ -23,7 +23,7 @@ public class AddTodoCommand : IAppCommand
 
   public async Task Execute(CancellationToken cancellationToken)
   {
-    var id = _idGenerator.Generate();
+    var id = _idSequence.Generate();
     await _userTodos.Save(id, _requestData, cancellationToken);
     await _responseInProgress.Success(id);
   }

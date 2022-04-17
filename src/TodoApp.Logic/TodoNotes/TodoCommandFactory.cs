@@ -12,18 +12,18 @@ public class TodoCommandFactory :
   ICommandFactory<CreateTodoRequestData, IAddTodoResponseInProgress>,
   ICommandFactory<LinkTodosRequestData, ILinkTodoResponseInProgress>
 {
-  private readonly IIdGenerator _idGenerator;
+  private readonly IIdSequence _idSequence;
   private readonly IUserTodosDao _userTodos;
 
-  public TodoCommandFactory(IIdGenerator idGenerator, IUserTodosDao userTodos)
+  public TodoCommandFactory(IIdSequence idSequence, IUserTodosDao userTodos)
   {
-    _idGenerator = idGenerator;
+    _idSequence = idSequence;
     _userTodos = userTodos;
   }
 
   public IAppCommand CreateCommand(CreateTodoRequestData requestData, IAddTodoResponseInProgress responseInProgress)
   {
-    return new AddTodoCommand(requestData, _idGenerator, _userTodos, responseInProgress);
+    return new AddTodoCommand(requestData, _idSequence, _userTodos, responseInProgress);
   }
 
   public IAppCommand CreateCommand(LinkTodosRequestData data, ILinkTodoResponseInProgress responseInProgress)
