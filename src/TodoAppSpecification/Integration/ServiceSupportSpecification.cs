@@ -1,58 +1,35 @@
-﻿using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
-using NLog.Targets;
-using NLog.Web;
-using TodoApp.Support;
-
-namespace TodoAppSpecification.Integration;
+﻿namespace TodoAppSpecification.Integration;
 
 public class ServiceSupportSpecification
 {
+
   [Test]
-  public void ShouldLogAccordingToFormat() //bug better name, cleanup, other messages
+  public void ShouldLogAuthorizationErrorAccordingToFormat()
   {
     //GIVEN
-    var inMemoryLogs = new MemoryTarget("memory");
-    var support = CreateServiceSupport(inMemoryLogs);
+    using var driver = new ServiceSupportDriver();
     var customerId = Any.String();
     var requestId = Any.String();
     var operationName = Any.String();
+    var exception = new Exception(Any.String());
 
     //WHEN
-    using (support.BeginScope(this, new Dictionary<string, object>
-           {
-             ["customerId"] = customerId,
-             ["requestId"] = requestId,
-             ["operationName"] = operationName
-           }))
+    using (driver.BeginScope(customerId, requestId, operationName))
     {
-      support.AuthorizationFailed(this, new Exception());
+      driver.NotifyAuthorizationFailed(exception);
     }
 
     //THEN
-    inMemoryLogs.Logs.Should().HaveCount(1);
-    inMemoryLogs.Logs.ElementAt(0).Should().Match(
-      CurrentDateString() +
-      $" *|0|ERROR|{GetType().FullName}|" +
-      $"Authorization failed System.Exception: Exception of type 'System.Exception' was thrown." +
-      $"|requestId={requestId}" +
-      $"|operationName={operationName}" +
-      $"|customerId={customerId}");
+    driver.LogCountShouldBe(1);
+    driver.FirstLogShouldMatch(CurrentDateString() +
+                                             $" *|0|ERROR|{typeof(ServiceSupportDriver).FullName}|" +
+                                             $"Authorization failed System.Exception: {exception.Message}" +
+                                             $"|requestId={requestId}" +
+                                             $"|operationName={operationName}" +
+                                             $"|customerId={customerId}");
   }
 
-  private static ServiceSupport CreateServiceSupport(MemoryTarget inMemoryLogs)
-  {
-    var loggerFactory = new LoggerFactory(new[]
-    {
-      new NLogLoggerProvider(NLogAspNetCoreOptions.Default,
-        LoggingAdapter.CreateLogFactory(inMemoryLogs))
-    });
-    var support = LoggingAdapter.CreateServiceSupport(loggerFactory);
-    return support;
-  }
-
-  private static string CurrentDateString()
+  public static string CurrentDateString()
   {
     return $"{DateTime.Now.Year.ToString("D2")}-{DateTime.Now.Month.ToString("D2")}-{DateTime.Now.Day.ToString("D2")}";
   }

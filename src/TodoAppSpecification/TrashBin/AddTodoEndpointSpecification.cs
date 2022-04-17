@@ -8,9 +8,9 @@ using TddXt.HttpContextMock;
 using TodoApp.Bootstrap;
 using TodoApp.Http.AddTodo;
 
-namespace TodoAppSpecification;
+namespace TodoAppSpecification.TrashBin;
 
-public class AddTodoActionSpecification
+public class AddTodoEndpointSpecification //bug what was I thinking when creating this?
 {
   [Test]
   public async Task ShouldRespondToPostTodoWithTodoCreated()
