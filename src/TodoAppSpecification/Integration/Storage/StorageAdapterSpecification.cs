@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using LanguageExt;
 using TddXt.AnyRoot;
 using TddXt.AnyRoot.Invokable;
 using TodoApp.Db;
@@ -24,12 +27,24 @@ public class StorageAdapterSpecification
     await storage.UserTodosDao.Save(id, savedNote, Any.CancellationToken());
 
     //WHEN
-    var loadedNote = await storage.UserTodosDao.Load(id, Any.CancellationToken());
+    var (guid, title, content, immutableHashSet) = await storage.UserTodosDao.Load(id, Any.CancellationToken());
 
     //THEN
-    loadedNote.Content.Should().Be(savedNote.Content);
-    loadedNote.Title.Should().Be(savedNote.Title);
-    loadedNote.Id.Should().Be(id);
-    loadedNote.Links.Should().Equal(ImmutableHashSet<Guid>.Empty);
+    content.Should().Be(savedNote.Content);
+    title.Should().Be(savedNote.Title);
+    guid.Should().Be(id);
+    immutableHashSet.Should().Equal(ImmutableHashSet<Guid>.Empty);
+  }
+
+  [Test]
+  public async Task ShouldThrowExceptionWhenTryingToLoadNoteThatDoesNotExist()
+  {
+    //GIVEN
+    var id = Any.Guid();
+    using var storage = new StorageAdapter();
+
+    //WHEN - THEN
+    (await storage.Awaiting(s => s.UserTodosDao.Load(id, Any.CancellationToken()))
+      .Should().ThrowExactlyAsync<NoteNotFoundException>()).WithMessage($"*{id}");
   }
 }

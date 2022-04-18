@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Any" Version="6.8.0" />
     <PackageReference Include="Flurl.Http" Version="3.2.2" />
+    <PackageReference Include="LanguageExt.Core" Version="4.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.4" />
     <PackageReference Include="NSubstitute" Version="4.3.0" />
     <PackageReference Include="nunit" Version="3.13.3" />

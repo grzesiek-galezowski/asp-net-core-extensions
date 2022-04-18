@@ -33,12 +33,19 @@ public class UserTodosDao : IUserTodosDao
 
   public async Task<TodoCreatedData> Load(Guid id, CancellationToken cancellationToken)
   {
-    using var liteDb = new LiteDatabase(_stream);
-    var persistentTodoDto = liteDb.GetCollection<PersistentTodoDto>().FindById(id);
-    return new TodoCreatedData(
-      persistentTodoDto.Id.OrThrow(), 
-      persistentTodoDto.Title.OrThrow(), 
-      persistentTodoDto.Content.OrThrow(), 
-      persistentTodoDto.LinkedNotes.OrThrow().ToImmutableHashSet());
+    try
+    {
+      using var liteDb = new LiteDatabase(_stream);
+      var persistentTodoDto = liteDb.GetCollection<PersistentTodoDto>().FindById(id);
+      return new TodoCreatedData(
+        persistentTodoDto.Id.OrThrow(),
+        persistentTodoDto.Title.OrThrow(),
+        persistentTodoDto.Content.OrThrow(),
+        persistentTodoDto.LinkedNotes.OrThrow().ToImmutableHashSet());
+    }
+    catch (Exception ex)
+    {
+      throw new NoteNotFoundException(id, ex);
+    }
   }
 }
