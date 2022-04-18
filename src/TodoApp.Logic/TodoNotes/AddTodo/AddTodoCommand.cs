@@ -10,7 +10,8 @@ public class AddTodoCommand : IAppCommand
   private readonly IAddTodoResponseInProgress _responseInProgress;
   private readonly IUserTodosDao _userTodos;
 
-  public AddTodoCommand(CreateTodoRequestData requestData,
+  public AddTodoCommand(
+    CreateTodoRequestData requestData,
     IIdSequence idSequence,
     IUserTodosDao userTodos,
     IAddTodoResponseInProgress addTodoResponseInProgress)
