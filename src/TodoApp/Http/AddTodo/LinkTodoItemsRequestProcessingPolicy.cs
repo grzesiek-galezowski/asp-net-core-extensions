@@ -7,7 +7,7 @@ using TodoApp.Http.Support;
 
 namespace TodoApp.Http.AddTodo;
 
-public class AddTodoItemRequestProcessingPolicy : IRequestProcessingPolicy
+public class LinkTodoItemsRequestProcessingPolicy : IRequestProcessingPolicy
 {
   private readonly TokenValidationParameters _validationParameters;
 
@@ -16,7 +16,7 @@ public class AddTodoItemRequestProcessingPolicy : IRequestProcessingPolicy
     return _validationParameters;
   }
 
-  public AddTodoItemRequestProcessingPolicy(TokenValidationParameters tokenValidationParameters)
+  public LinkTodoItemsRequestProcessingPolicy(TokenValidationParameters tokenValidationParameters)
   {
     _validationParameters = tokenValidationParameters;
   }
@@ -33,7 +33,6 @@ public class AddTodoItemRequestProcessingPolicy : IRequestProcessingPolicy
   {
     return AggregateCondition.ConsistingOf(
       Conditions.HeaderAsExpected(HeaderNames.Accept, MediaTypeNames.Application.Json),
-      Conditions.HeaderAsExpected(HeaderNames.ContentType, MediaTypeNames.Application.Json),
       Conditions.HeaderDefined(HeaderNames.Authorization),
       Conditions.QueryParamDefined(HttpRequestParameterNames.CustomerId),
       Conditions.RouteContainsGuidNamed(HttpRequestParameterNames.Id1),

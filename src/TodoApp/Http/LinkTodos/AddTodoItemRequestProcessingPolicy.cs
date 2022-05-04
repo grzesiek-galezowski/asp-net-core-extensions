@@ -1,3 +1,4 @@
+using System;
 using System.Net.Mime;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
@@ -7,11 +8,11 @@ using TodoApp.Http.Support;
 
 namespace TodoApp.Http.LinkTodos;
 
-public class LinkTodoItemsRequestProcessingPolicy : IRequestProcessingPolicy
+public class AddTodoItemRequestProcessingPolicy : IRequestProcessingPolicy
 {
   private readonly TokenValidationParameters _validationParameters;
 
-  public LinkTodoItemsRequestProcessingPolicy(TokenValidationParameters tokenValidationParameters)
+  public AddTodoItemRequestProcessingPolicy(TokenValidationParameters tokenValidationParameters)
   {
     _validationParameters = tokenValidationParameters;
   }

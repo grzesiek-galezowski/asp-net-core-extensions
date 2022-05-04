@@ -5,7 +5,7 @@ using NLog.Targets;
 using NLog.Web;
 using TodoApp.Support;
 
-namespace TodoAppSpecification.Integration.Support;
+namespace TodoAppSpecification.AdapterSpecification.Support;
 
 public class ServiceSupportDriver : IDisposable
 {

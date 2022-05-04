@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using LanguageExt;
+﻿using System.Collections.Immutable;
 using TddXt.AnyRoot;
 using TddXt.AnyRoot.Invokable;
 using TodoApp.Db;
 using TodoApp.Logic.TodoNotes.AddTodo;
 
-namespace TodoAppSpecification.Integration.Storage;
+namespace TodoAppSpecification.AdapterSpecification.Storage;
 
 public class StorageAdapterSpecification
 {

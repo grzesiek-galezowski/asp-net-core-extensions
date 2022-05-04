@@ -9,7 +9,7 @@ using NLog.Web;
 using TodoApp.Bootstrap;
 using TodoApp.Support;
 
-namespace TodoAppSpecification.HostSpec;
+namespace TodoAppSpecification.HostSpecification;
 
 public class AppFactory : WebApplicationFactory<ServiceLogicRoot>
 {
@@ -29,12 +29,14 @@ public class AppFactory : WebApplicationFactory<ServiceLogicRoot>
 
   protected override void ConfigureWebHost(IWebHostBuilder builder)
   {
-    builder.ConfigureServices(services => 
-      services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+    builder.ConfigureServices(services =>
       {
-        options.TokenValidationParameters.ValidIssuer = TestTokens.Issuer;
-        options.TokenValidationParameters.IssuerSigningKey = TestTokens.SecurityKey;
-      }))
+        services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+        {
+          options.TokenValidationParameters.ValidIssuer = TestTokens.Issuer;
+          options.TokenValidationParameters.IssuerSigningKey = TestTokens.SecurityKey;
+        });
+      })
       .ConfigureLogging(loggingBuilder =>
       {
         loggingBuilder.ClearProviders();

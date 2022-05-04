@@ -21,7 +21,7 @@ public class EndpointsAdapter
   {
     LinkTodoEndpoint =
       StandardEndpoint(support,
-        new AddTodoItemRequestProcessingPolicy(tokenValidationParameters),
+        new LinkTodoItemsRequestProcessingPolicy(tokenValidationParameters),
         new ExecutingCommandEndpoint<LinkTodosRequestData, ILinkTodoResponseInProgress>(
           new LinkTodosRequestDataParser(),
           linkTodoCommandFactory,
@@ -29,7 +29,7 @@ public class EndpointsAdapter
 
     AddTodoEndpoint =
       StandardEndpoint(support,
-        new LinkTodoItemsRequestProcessingPolicy(tokenValidationParameters),
+        new AddTodoItemRequestProcessingPolicy(tokenValidationParameters),
         new ExecutingCommandEndpoint<CreateTodoRequestData, IAddTodoResponseInProgress>(
           new AddTodoRequestDataParser(
             new AddTodoDtoParser(

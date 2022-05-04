@@ -14,7 +14,7 @@ var app = builder.Build();
 var serviceLogicRoot = new ServiceLogicRoot(
     app.Services.GetTokenValidationParameters(),
     app.Services.GetRequiredService<ILoggerFactory>()
-    );
+);
 
 app.MapPost("/todo",
   async (HttpRequest request, HttpResponse response, CancellationToken token) =>

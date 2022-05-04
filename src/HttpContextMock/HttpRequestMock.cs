@@ -189,4 +189,10 @@ public class HttpRequestMock
     RealInstance.Body.Position = 0;
     return this;
   }
+
+  public HttpRequestMock WithoutHeader(string headerName)
+  {
+    RealInstance.Headers.Remove(headerName);
+    return this;
+  }
 }

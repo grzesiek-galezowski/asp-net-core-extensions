@@ -1,4 +1,4 @@
-﻿namespace TodoAppSpecification.Integration.Support;
+﻿namespace TodoAppSpecification.AdapterSpecification.Support;
 
 public class ServiceSupportAdapterSpecification
 {
@@ -28,7 +28,7 @@ public class ServiceSupportAdapterSpecification
                                              $"|customerId={customerId}");
   }
 
-  public static string CurrentDateString()
+  private static string CurrentDateString()
   {
     return $"{DateTime.Now.Year.ToString("D2")}-{DateTime.Now.Month.ToString("D2")}-{DateTime.Now.Day.ToString("D2")}";
   }
