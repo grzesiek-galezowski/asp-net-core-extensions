@@ -1,4 +1,6 @@
-﻿namespace TodoAppSpecification.AdapterSpecification.Support;
+﻿using TodoAppSpecification.AdapterSpecification.Support.Automation;
+
+namespace TodoAppSpecification.AdapterSpecification.Support;
 
 public class ServiceSupportAdapterSpecification
 {

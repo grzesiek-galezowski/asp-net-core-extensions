@@ -9,7 +9,7 @@ using NLog.Web;
 using TodoApp.Bootstrap;
 using TodoApp.Support;
 
-namespace TodoAppSpecification.HostSpecification;
+namespace TodoAppSpecification.HostSpecification.Automation;
 
 public class AppFactory : WebApplicationFactory<ServiceLogicRoot>
 {

@@ -1,6 +1,6 @@
 ﻿using TddXt.HttpContextMock;
 
-namespace TodoAppSpecification.HostSpecification;
+namespace TodoAppSpecification.AdapterSpecification.Endpoints.Automation;
 
 public class AddTodoItemAdapterResponse
 {

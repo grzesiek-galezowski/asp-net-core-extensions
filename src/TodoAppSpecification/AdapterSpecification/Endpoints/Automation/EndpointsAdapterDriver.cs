@@ -9,7 +9,7 @@ using TodoApp.Logic.TodoNotes;
 using TodoApp.Logic.TodoNotes.AddTodo;
 using TodoApp.Logic.TodoNotes.LinkTodos;
 
-namespace TodoAppSpecification.HostSpecification;
+namespace TodoAppSpecification.AdapterSpecification.Endpoints.Automation;
 
 public class EndpointsAdapterDriver
 {

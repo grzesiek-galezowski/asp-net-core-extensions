@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Flurl.Http;
 
-namespace TodoAppSpecification.HostSpecification;
+namespace TodoAppSpecification.HostSpecification.Automation;
 
 public class LinkTodosResponse
 {

@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using Flurl.Http;
+using TodoAppSpecification.HostSpecification.Automation;
 
 namespace TodoAppSpecification.HostSpecification;
 

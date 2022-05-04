@@ -1,4 +1,5 @@
-﻿using TodoAppSpecification.HostSpecification;
+﻿using TodoAppSpecification.AdapterSpecification.Endpoints.Automation;
+using TodoAppSpecification.HostSpecification;
 
 namespace TodoAppSpecification.AdapterSpecification.Endpoints;
 

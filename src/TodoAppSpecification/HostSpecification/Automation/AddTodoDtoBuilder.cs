@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TodoApp.Http.AddTodo;
 
-namespace TodoAppSpecification.HostSpecification;
+namespace TodoAppSpecification.HostSpecification.Automation;
 
 public record AddTodoDtoBuilder
 {
