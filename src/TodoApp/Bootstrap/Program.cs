@@ -1,21 +1,26 @@
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using TodoApp.Bootstrap;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton(ctx => new ServiceLogicRoot(
+  ctx.GetTokenValidationParameters(),
+  ctx.GetRequiredService<ILoggerFactory>()));
+
 builder.SetupNLog();
+builder.Services.AddHealthChecks().AddCheck("ready", _ => HealthCheckResult.Healthy());
 
 var app = builder.Build();
+var serviceLogicRoot = app.Services.GetRequiredService<ServiceLogicRoot>();
 
-var serviceLogicRoot = new ServiceLogicRoot(
-    app.Services.GetTokenValidationParameters(),
-    app.Services.GetRequiredService<ILoggerFactory>()
-);
 
+app.MapHealthChecks("health");
 app.MapPost("/todo",
   async (HttpRequest request, HttpResponse response, CancellationToken token) =>
   {
@@ -29,7 +34,6 @@ app.MapPost("/todo/{id1}/link/{id2}",
   });
 
 app.Run();
-
 
 namespace TodoApp.Bootstrap
 {

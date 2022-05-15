@@ -8,3 +8,4 @@ global using static TddXt.AnyRoot.Root;
 global using System.Linq;
 global using System.Threading.Tasks;
 global using FluentAssertions;
+global using Flurl.Http;

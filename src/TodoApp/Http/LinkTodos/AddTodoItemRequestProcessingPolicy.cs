@@ -1,4 +1,3 @@
-using System;
 using System.Net.Mime;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;

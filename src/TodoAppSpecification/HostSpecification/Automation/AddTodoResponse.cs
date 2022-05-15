@@ -1,6 +1,4 @@
-﻿using Flurl.Http;
-
-namespace TodoAppSpecification.HostSpecification.Automation;
+﻿namespace TodoAppSpecification.HostSpecification.Automation;
 
 public class AddTodoResponse
 {

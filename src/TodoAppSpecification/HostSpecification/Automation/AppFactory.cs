@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Net;
+using FluentAssertions.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Targets;
 using NLog.Web;
+using Polly;
 using TodoApp.Bootstrap;
 using TodoApp.Support;
 
@@ -48,10 +51,24 @@ public class AppFactory : WebApplicationFactory<ServiceLogicRoot>
 
   public override async ValueTask DisposeAsync()
   {
-    //bug this line belongs in the driver
-    await TestContext.Out.WriteLineAsync(string.Join(Environment.NewLine, _inMemoryLogs.Logs));
-    
     await _host.StopAsync();
     await base.DisposeAsync();
+  }
+
+  public async Task PrintLogs()
+  {
+    await TestContext.Out.WriteLineAsync(string.Join(Environment.NewLine, _inMemoryLogs.Logs));
+  }
+
+  public FlurlClient FlurlClient()
+  {
+    return new FlurlClient(CreateClient());
+  }
+
+  public Task<IFlurlResponse> ReadinessCheck()
+  {
+    return Policy.Handle<FlurlHttpException>(exception => exception.StatusCode != (int)HttpStatusCode.NotFound)
+      .WaitAndRetryAsync(20, _ => 1.Seconds())
+      .ExecuteAsync(async () => await FlurlClient().Request("health").GetAsync());
   }
 }

@@ -1,19 +1,18 @@
 ﻿using System.Net;
-using Flurl.Http;
 
 namespace TodoAppSpecification.HostSpecification.Automation;
 
 public class LinkTodosResponse
 {
-  public readonly IFlurlResponse Response;
+  private readonly IFlurlResponse _response;
 
   public LinkTodosResponse(IFlurlResponse response)
   {
-    Response = response;
+    _response = response;
   }
 
   public void ShouldBeSuccessful()
   {
-    Response.ResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
+    _response.ResponseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
   }
 }
