@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using TodoApp.Db;

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Immutable;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using Core.NullableReferenceTypesExtensions;
 using LiteDB;
 using TodoApp.Logic.TodoNotes;

@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using TodoApp.Logic.TodoNotes.AddTodo;
 

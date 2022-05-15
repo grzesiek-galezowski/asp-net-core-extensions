@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using TodoApp.Http.ParsingJson;
 using TodoApp.Logic.TodoNotes.AddTodo;
