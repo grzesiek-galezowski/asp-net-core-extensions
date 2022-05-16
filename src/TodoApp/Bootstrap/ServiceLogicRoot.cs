@@ -4,6 +4,7 @@ using NLog;
 using TodoApp.Db;
 using TodoApp.Http;
 using TodoApp.Http.Flow;
+using TodoApp.Http.HealthChecks;
 using TodoApp.Logic;
 using TodoApp.Random;
 using TodoApp.Support;
@@ -35,6 +36,7 @@ public class ServiceLogicRoot : IAsyncDisposable
 
   public IAsyncEndpoint AddTodoEndpoint => _endpointsAdapter.AddTodoEndpoint;
   public IAsyncEndpoint LinkTodoEndpoint => _endpointsAdapter.LinkTodoEndpoint;
+  public IAppHealthCheck IsReadyHealthCheck { get; } = new TrivialHealthCheck();
 
   public async ValueTask DisposeAsync()
   {
