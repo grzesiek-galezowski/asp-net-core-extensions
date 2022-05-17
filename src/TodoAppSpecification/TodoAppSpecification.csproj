@@ -26,4 +26,8 @@
     <ProjectReference Include="..\TodoApp\TodoApp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ComponentSpecification\" />
+  </ItemGroup>
+
 </Project>

@@ -21,9 +21,14 @@ public static class AppBuilderExtensions
   public static void SetupNLog(this WebApplicationBuilder webApplicationBuilder)
   {
       webApplicationBuilder.Logging.ClearProviders();
-      webApplicationBuilder.Logging.AddNLog(_ => ServiceLogicRoot.CreateLogFactory());
+      webApplicationBuilder.Logging.AddNLog(_ => Bootstrap.ServiceLogicRoot.CreateLogFactory());
       webApplicationBuilder.Logging.AddNLogWeb();
       webApplicationBuilder.Logging.SetMinimumLevel(LogLevel.Trace);
       webApplicationBuilder.Host.UseNLog();
+  }
+
+  public static ServiceLogicRoot ServiceLogicRoot(this Lazy<WebApplication> app)
+  {
+    return app.Value.Services.GetRequiredService<ServiceLogicRoot>();
   }
 }

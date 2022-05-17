@@ -17,13 +17,12 @@ builder.Services.AddSingleton(ctx => new ServiceLogicRoot(
 builder.SetupNLog();
 builder.Services.AddHealthChecks().AddAsyncCheck("ready", 
   async cancellationToken => 
-    await webAppInitialization.Value
-      .Services.GetRequiredService<ServiceLogicRoot>()
+    await webAppInitialization.ServiceLogicRoot()
       .IsReadyHealthCheck
       .RetrieveStatus(cancellationToken));
 
 var app = webAppInitialization.Value;
-var serviceLogicRoot = app.Services.GetRequiredService<ServiceLogicRoot>();
+var serviceLogicRoot = webAppInitialization.ServiceLogicRoot();
 
 app.MapHealthChecks("health");
 app.MapPost("/todo",
