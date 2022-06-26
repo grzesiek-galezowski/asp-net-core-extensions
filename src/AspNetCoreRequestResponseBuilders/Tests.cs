@@ -22,21 +22,22 @@ public class Tests
     var httpContextMock = HttpContextMock.Default();
     httpContextMock.Request()
       .WithHeader("Accept", "text/plain")
-      .WithHeader(new {Accept = MediaTypeNames.Text.Plain})
+      .WithHeader(new { Accept = MediaTypeNames.Text.Plain })
       .Https()
       .AppendPathSegment("person")
       .AppendPathSegments("person2", "person3")
-      .AppendPathSegments(new List<string> {"person4"})
+      .AppendPathSegments(new List<string> { "person4" })
       .AppendPathSegment("person5")
       .WithStringBody("lolek")
-      .WithJsonBody(new  { A = 123, B = "SAA"})
+      .WithJsonBody(new { A = 123, B = "SAA" })
       .WithOAuthBearerToken("my_oauth_token")
       .WithBasicAuth("password")
-      .WithQueryParams(new {a = 1, b = 2})
+      .WithQueryParams(new { a = 1, b = 2 })
       .WithQueryParam("c", "x")
       .WithQueryParam("d", null);
     //todo https://flurl.dev/docs/fluent-http/
-    Assert.AreEqual("{\"A\":123,\"B\":\"SAA\"}", new StreamReader(httpContextMock.RealInstance.Request.Body).ReadToEnd());
+    Assert.AreEqual("{\"A\":123,\"B\":\"SAA\"}",
+      new StreamReader(httpContextMock.RealInstance.Request.Body).ReadToEnd());
   }
 
   [Test]
@@ -65,15 +66,15 @@ public class Tests
     httpContextMock.RealInstance.Request.QueryString.ToString().Should().Be("?lol=a,b");
   }
 
-    [Test]
-    public void ShouldAllowGettingLoggerFactory()
-    {
-        var httpContextMock = HttpContextMock.Default();
-        httpContextMock.RealInstance.RequestServices.GetRequiredService<ILoggerFactory>()
-          .Should().NotBeNull();
-    }
+  [Test]
+  public void ShouldAllowGettingLoggerFactory()
+  {
+    var httpContextMock = HttpContextMock.Default();
+    httpContextMock.RealInstance.RequestServices.GetRequiredService<ILoggerFactory>()
+      .Should().NotBeNull();
+  }
 
-    [Test]
+  [Test]
   public void ShouldAllowSettingBytesBody()
   {
     var httpContextMock = HttpContextMock.Default();
@@ -89,7 +90,7 @@ public class Tests
     result.Should().Equal(content);
     httpContextMock.Request().RealInstance.Body.Length.Should().Be(3);
   }
-    
+
   [Test]
   public void ShouldAllowSettingQueryViaQueryCollection()
   {
@@ -117,7 +118,7 @@ public class Tests
 
     httpContextMock.Request().RealInstance.Query[name].Should().BeEquivalentTo(new StringValues(value));
   }
-    
+
   [Test]
   public void ShouldAllowRewindingRequestBody()
   {
