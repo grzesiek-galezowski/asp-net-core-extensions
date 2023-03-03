@@ -142,7 +142,7 @@ public class HttpRequestMock
     return this;
   }
 
-  public HttpRequestMock WithHeader(string key, string value)
+  public HttpRequestMock WithHeader(string key, string? value)
   {
     RealInstance.Headers[key] = value;
     return this;
