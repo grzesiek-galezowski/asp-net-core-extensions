@@ -1,7 +1,9 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading;
+using Core.NullableReferenceTypesExtensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Sprache;
 using TodoApp.Http.Support;
@@ -28,7 +30,7 @@ public class AuthorizationEndpoint : IAsyncEndpoint
     try
     {
       var tokenHandler = new JwtSecurityTokenHandler();
-      string authorizationContent = request.Headers["Authorization"];
+      var authorizationContent = request.Headers["Authorization"].ToString().OrThrow();
       Parser<string> parser = Parse.String("Bearer ").Then(_ =>
         from rest in Parse.AnyChar.Many().Text().Token()
         select rest);

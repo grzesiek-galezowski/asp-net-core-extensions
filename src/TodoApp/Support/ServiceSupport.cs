@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.NullableReferenceTypesExtensions;
 using Microsoft.Extensions.Logging;
 using TodoApp.Http.Support;
 
@@ -26,7 +27,7 @@ public class ServiceSupport : IEndpointsSupport
 
   public IDisposable BeginScope(object source, Dictionary<string, object> properties)
   {
-    return LoggerFor(source).BeginScope(properties);
+    return LoggerFor(source).BeginScope(properties).OrThrow();
   }
 
   public void BadRequest(object source, Exception exception)
